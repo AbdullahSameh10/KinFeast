@@ -88,7 +88,11 @@ export default function AdminModerationPage() {
   }, [debouncedSearch, page]);
 
   useEffect(() => {
-    void loadQueue();
+    const timeoutId = window.setTimeout(() => {
+      void loadQueue();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadQueue]);
 
   const moderateRecipe = async () => {
