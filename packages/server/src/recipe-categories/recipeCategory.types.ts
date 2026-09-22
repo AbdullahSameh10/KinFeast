@@ -1,0 +1,6 @@
+export interface RecipeCategory {
+  id: number;
+  name: string;
+  slug: string;
+  created_at: string;
+}

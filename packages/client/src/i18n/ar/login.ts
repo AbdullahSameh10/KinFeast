@@ -1,0 +1,21 @@
+﻿export const login = {
+  eyebrow: "مرحبًا بعودتك",
+  title: "مرحبًا بعودتك.",
+  subtitle: "مطبخك بانتظارك.",
+  leftTitle: "اطبخ. شارك. استمتع.",
+  leftSubtitle:
+    "اكتشف الوصفات، وتعرّف على الطهاة الشغوفين، وقدّم شيئًا لذيذًا إلى مائدتك.",
+  email: "البريد الإلكتروني",
+  emailPlaceholder: "أدخل بريدك الإلكتروني",
+  password: "كلمة المرور",
+  passwordPlaceholder: "أدخل كلمة المرور",
+  showPassword: "إظهار كلمة المرور",
+  hidePassword: "إخفاء كلمة المرور",
+  submit: "تسجيل الدخول",
+  submitting: "جارٍ تسجيل الدخول...",
+  noAccount: "جديد على KinFeast؟",
+  createAccount: "إنشاء حساب",
+  backHome: "العودة إلى الصفحة الرئيسية",
+  invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  genericError: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+} as const;

@@ -1,0 +1,21 @@
+﻿export const login = {
+  eyebrow: "WELCOME BACK",
+  title: "Welcome back.",
+  subtitle: "Your kitchen is waiting for you.",
+  leftTitle: "Cook. Share. Feast.",
+  leftSubtitle:
+    "Discover recipes, meet passionate cooks, and bring something delicious to the table.",
+  email: "Email address",
+  emailPlaceholder: "Enter your email address",
+  password: "Password",
+  passwordPlaceholder: "Enter your password",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
+  submit: "Sign in",
+  submitting: "Signing in...",
+  noAccount: "New to KinFeast?",
+  createAccount: "Create an account",
+  backHome: "Back to home",
+  invalidCredentials: "Invalid email or password.",
+  genericError: "Something went wrong. Please try again.",
+} as const;
