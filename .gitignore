@@ -1,6 +1,8 @@
 # Dependencies
 node_modules/
 
+database-backups/
+
 # Environment variables
 .env
 .env.*
