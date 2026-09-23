@@ -15,7 +15,7 @@ import {
   LogOut,
   PanelLeftOpen,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import logoDark from "../../assets/logo (dark).png";
@@ -24,6 +24,7 @@ import logoCollapsed from "../../assets/logo-collapsed.png";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/useTheme";
+import { useLanguage } from "../../hooks/useLanguage";
 
 interface AdminShellProps {
   children: ReactNode;
@@ -41,11 +42,24 @@ const navigation = [
 function AdminShell({ children }: AdminShellProps) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { language } = useLanguage();
 
   const navigate = useNavigate();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    // Admin dashboard currently only supports English.
+    document.documentElement.dir = "ltr";
+    document.documentElement.lang = "en";
+
+    return () => {
+      // Restore the user's selected language when leaving the admin area.
+      document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+      document.documentElement.lang = language;
+    };
+  }, [language]);
 
   const closeMobileSidebar = () => setIsSidebarOpen(false);
 
@@ -57,7 +71,10 @@ function AdminShell({ children }: AdminShellProps) {
   const handleToggleCollapse = () => setIsCollapsed((current) => !current);
 
   return (
-    <div className="min-h-screen bg-stone-100 text-stone-950 dark:bg-stone-950 dark:text-white">
+    <div
+  dir="ltr"
+  className="min-h-screen bg-stone-100 text-stone-950 dark:bg-stone-950 dark:text-white"
+>
       {/* Mobile backdrop */}
       <button
         type="button"

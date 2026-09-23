@@ -35,6 +35,7 @@ function Navbar() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileLanguageOpen, setIsMobileLanguageOpen] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -64,11 +65,13 @@ function Navbar() {
   const handleLanguageChange = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
     setIsLanguageOpen(false);
+    setIsMobileLanguageOpen(false);
   };
 
   const closeMobileMenu = () => {
-    setIsMenuOpen(false);
-  };
+  setIsMenuOpen(false);
+  setIsMobileLanguageOpen(false);
+};
 
   const handleLogout = () => {
     logout();
@@ -82,6 +85,7 @@ function Navbar() {
       if (event.key === "Escape") {
         setIsMenuOpen(false);
         setIsLanguageOpen(false);
+        setIsMobileLanguageOpen(false);
         setIsProfileOpen(false);
       }
     };
@@ -454,7 +458,6 @@ function Navbar() {
                 </div>
               </>
             )}
-
             {/* Navigation Links */}
             <div className="flex flex-col gap-2">
               <Link
@@ -493,10 +496,8 @@ function Navbar() {
                 {t.about}
               </Link>
             </div>
-
             {/* Divider */}
             <div className="my-6 border-t border-stone-200 dark:border-stone-800" />
-
             {/* Mobile Auth Actions */}
             {isAuthenticated && user ? (
               <button
@@ -531,25 +532,121 @@ function Navbar() {
                 </Link>
               </div>
             )}
+            {/* Mobile Language Selector */}
+<div className="mt-4">
+  <button
+    type="button"
+    onClick={() =>
+      setIsMobileLanguageOpen((current) => !current)
+    }
+    aria-expanded={isMobileLanguageOpen}
+    aria-controls="mobile-language-options"
+    className="flex w-full items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-4 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 dark:hover:bg-stone-800"
+  >
+    <span className="flex items-center gap-3">
+      <Globe2
+        size={19}
+        strokeWidth={2}
+        className="text-stone-500 dark:text-stone-400"
+      />
 
-            {/* Mobile Theme */}
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="mt-4 flex items-center justify-center gap-2 rounded-full border border-stone-200 px-5 py-3 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:border-stone-700 dark:text-stone-200 dark:hover:bg-stone-900"
+      <span>{t.language}</span>
+    </span>
+
+    <span className="flex items-center gap-2">
+      <span className="text-sm font-medium text-orange-500 dark:text-orange-400">
+        {languages.find((item) => item.code === language)?.label}
+      </span>
+
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        className={`h-4 w-4 text-stone-400 transition-transform duration-200 ${
+          isMobileLanguageOpen ? "rotate-180" : ""
+        }`}
+      >
+        <path
+          d="M5 7.5L10 12.5L15 7.5"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  </button>
+
+  {/* Language Options */}
+<div
+  id="mobile-language-options"
+  className={`grid transition-all duration-200 ease-out ${
+    isMobileLanguageOpen
+      ? "mt-2 grid-rows-[1fr] opacity-100"
+      : "grid-rows-[0fr] opacity-0"
+  }`}
+>
+  <div className="min-h-0 overflow-hidden">
+    <div
+      className="
+        dashboard-scrollbar
+        max-h-64
+        overflow-y-auto
+        rounded-2xl
+        border border-stone-200
+        bg-white
+        p-1.5
+        dark:border-stone-800
+        dark:bg-stone-900
+      "
+    >
+      {languages.map((item) => (
+        <button
+          key={item.code}
+          type="button"
+          onClick={() => handleLanguageChange(item.code)}
+          tabIndex={isMenuOpen && isMobileLanguageOpen ? 0 : -1}
+          className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors ${
+            language === item.code
+              ? "bg-orange-500/10 font-semibold text-orange-600 dark:bg-orange-400/10 dark:text-orange-400"
+              : "text-stone-700 hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-800"
+          }`}
+        >
+          <span>{item.label}</span>
+
+          {language === item.code && (
+            <span
+              className="text-sm text-orange-500 dark:text-orange-400"
+              aria-hidden="true"
             >
-              {theme === "dark" ? (
-                <>
-                  <Sun size={18} strokeWidth={2} />
-                  <span>{t.lightMode}</span>
-                </>
-              ) : (
-                <>
-                  <Moon size={18} strokeWidth={2} />
-                  <span>{t.darkMode}</span>
-                </>
-              )}
-            </button>
+              ✓
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+</div>
+
+{/* Mobile Theme */}
+<button
+  type="button"
+  onClick={toggleTheme}
+  tabIndex={isMenuOpen ? 0 : -1}
+  className="mt-4 flex items-center justify-center gap-2 rounded-full border border-stone-200 px-5 py-3 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:border-stone-700 dark:text-stone-200 dark:hover:bg-stone-900"
+>
+  {theme === "dark" ? (
+    <>
+      <Sun size={18} strokeWidth={2} />
+      <span>{t.lightMode}</span>
+    </>
+  ) : (
+    <>
+      <Moon size={18} strokeWidth={2} />
+      <span>{t.darkMode}</span>
+    </>
+  )}
+</button>
           </div>
         </aside>
       </div>
