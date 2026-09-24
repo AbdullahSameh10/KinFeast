@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://kinfeast.vercel.app/logo.png" alt="Status" />
+  <img src="https://kinfeast.vercel.app/logo.png" width="500" alt="Status" />
 </p>
 
 ### *A modern recipe platform built around food, people, discovery, and community.*
