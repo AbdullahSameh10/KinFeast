@@ -1,34 +1,7 @@
 <p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=150&section=header&color=154f19" width="100%">
   <img src="https://kinfeast.vercel.app/logo.png" width="500" alt="Status" />
 </p>
-
-### *A modern recipe platform built around food, people, discovery, and community.*
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Actively%20Developed-orange?style=for-the-badge" alt="Status" />
-  <img src="https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge" alt="Version" />
-  <img src="https://img.shields.io/badge/License-TBD-lightgrey?style=for-the-badge" alt="License" />
-  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge" alt="PRs Welcome" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/English-🇬🇧-blue?style=for-the-badge" alt="English" />
-  <img src="https://img.shields.io/badge/العربية-🇸🇦-green?style=for-the-badge" alt="Arabic" />
-  <img src="https://img.shields.io/badge/Light_Mode-☀️-yellow?style=for-the-badge" alt="Light Mode" />
-  <img src="https://img.shields.io/badge/Dark_Mode-🌙-darkblue?style=for-the-badge" alt="Dark Mode" />
-</p>
-
----
 
 **KinFeast** is a full-stack recipe platform designed to bring **home cooks, food lovers, chefs, and platform administrators** into one polished ecosystem.
 
@@ -839,25 +812,4 @@ Give the team the tools to understand content, users, engagement, moderation, an
 <p align="center">
   <em>Discover recipes. Follow chefs. Share food. Build a community.</em>
 </p>
-
----
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Made_with-❤️_&_🍳-red?style=for-the-badge" alt="Made with love and food" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/🍽️_KinFeast-2025-FF6B6B?style=for-the-badge" alt="KinFeast 2025" />
-</p>
-
----
-
-### License
-
-This project is currently under active development. Licensing and contribution terms should be finalized before public distribution.
-
----
-
-<p align="center">
-  <a href="#-kinfeast">⬆️ Back to Top</a>
-</p>
+<img src="https://capsule-render.vercel.app/api?type=waving&height=150&section=footer&color=154f19" width="100%">
