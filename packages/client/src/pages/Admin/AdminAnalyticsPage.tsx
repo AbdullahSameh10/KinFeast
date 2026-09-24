@@ -37,6 +37,26 @@ function formatActivityDate(date: string) {
   }).format(new Date(`${date}T00:00:00`));
 }
 
+function formatMarketingSource(sourceKey: string) {
+  const labels: Record<string, string> = {
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    youtube: "YouTube",
+    search_engine: "Search engine",
+    friend: "Friend or family",
+    food_community: "Food community",
+    another_website: "Another website",
+    just_stumbled_upon: "Just stumbled upon KinFeast",
+    other: "Other",
+  };
+  return (
+    labels[sourceKey] ??
+    sourceKey
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase())
+  );
+}
+
 function Stat({
   label,
   value,
@@ -309,7 +329,6 @@ function AdminAnalyticsPage() {
                 />
               </Link>
             </section>
-
             {/* Main charts */}
             <section className="mt-6 grid gap-6 xl:grid-cols-[1.7fr_1fr]">
               {/* Platform activity */}
@@ -492,7 +511,6 @@ function AdminAnalyticsPage() {
                 )}
               </Panel>
             </section>
-
             {/* Categories + cuisine */}
             <section className="mt-6 grid gap-6 lg:grid-cols-2">
               {/* Categories */}
@@ -687,7 +705,88 @@ function AdminAnalyticsPage() {
                 )}
               </Panel>
             </section>
-
+            {/* Marketing analysis */}
+            <section className="mt-6">
+              
+              <Panel
+                title="How users found KinFeast"
+                description="Where registered users said they heard about KinFeast."
+              >
+                
+                {a.marketingSources.some((source) => source.count > 0) ? (
+                  <div className="p-5 sm:p-6">
+                    
+                    <div className="space-y-5">
+                      
+                      {a.marketingSources.map((source) => {
+                        const maxCount = Math.max(
+                          ...a.marketingSources.map((item) => item.count),
+                          1,
+                        );
+                        const barWidth =
+                          source.count === 0
+                            ? 0
+                            : Math.max((source.count / maxCount) * 100, 3);
+                        return (
+                          <div key={source.id}>
+                            
+                            <div className="mb-2 flex items-center justify-between gap-4">
+                              
+                              <div className="min-w-0">
+                                
+                                <p className="truncate text-sm font-semibold text-stone-800 dark:text-stone-200">
+                                  
+                                  {formatMarketingSource(
+                                    source.source_key,
+                                  )}
+                                </p>
+                              </div>
+                              <div className="flex shrink-0 items-center gap-3">
+                                
+                                <span className="text-sm font-bold text-stone-900 dark:text-white">
+                                  
+                                  {num(source.count)}
+                                </span>
+                                <span className="w-12 text-right text-xs font-medium text-stone-400">
+                                  
+                                  {Number(source.percentage).toFixed(1)}%
+                                </span>
+                              </div>
+                            </div>
+                            <div className="h-2.5 overflow-hidden rounded-full bg-stone-100 dark:bg-stone-800">
+                              
+                              <div
+                                className="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all duration-500"
+                                style={{ width: `${barWidth}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-6 flex items-center justify-between border-t border-stone-100 pt-4 dark:border-stone-800">
+                      
+                      <span className="text-xs font-medium text-stone-400">
+                        
+                        Total attributed registrations
+                      </span>
+                      <span className="text-sm font-bold text-stone-800 dark:text-stone-200">
+                        
+                        {num(
+                          a.marketingSources.reduce(
+                            (total, source) => total + source.count,
+                            0,
+                          ),
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <Empty />
+                )}
+              </Panel>
+            </section>
+            
             {/* Top recipes + chefs */}
             <section className="mt-6 grid gap-6 xl:grid-cols-2">
               <Panel
@@ -777,8 +876,7 @@ function AdminAnalyticsPage() {
                           </p>
 
                           <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-                            {c.published_count} published · {c.follower_count}{" "}
-                            followers
+                            {c.published_count} published · {c.follower_count} followers
                           </p>
                         </div>
 
@@ -799,7 +897,6 @@ function AdminAnalyticsPage() {
                 )}
               </Panel>
             </section>
-
             {/* Secondary stats */}
             <section className="mt-6 grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-stone-800 dark:bg-stone-900">

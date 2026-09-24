@@ -7,6 +7,7 @@ export const getAdminAnalytics = async () => {
     status,
     categories,
     cuisines,
+    marketingSources,
     topRecipes,
     topChefs,
   ] = await Promise.all([
@@ -111,6 +112,9 @@ export const getAdminAnalytics = async () => {
         LIMIT 8
       `,
     ),
+    pool.query(
+      `WITH source_counts AS (SELECT ms.id, ms.source_key, ms.sort_order, COUNT(ma.id)::int AS count FROM marketing_sources ms LEFT JOIN marketing_attributions ma ON ma.source_id = ms.id GROUP BY ms.id, ms.source_key, ms.sort_order ), totals AS ( SELECT COALESCE(SUM(count), 0)::int AS total FROM source_counts ) SELECT sc.id, sc.source_key, sc.count, CASE WHEN totals.total = 0 THEN 0 ELSE ROUND((sc.count::numeric / totals.total::numeric) * 100, 1) END AS percentage FROM source_counts sc CROSS JOIN totals ORDER BY sc.count DESC, sc.sort_order ASC, sc.id ASC `,
+    ),
 
     pool.query(
       `
@@ -213,6 +217,7 @@ export const getAdminAnalytics = async () => {
 
     categories: categories.rows,
     cuisines: cuisines.rows,
+    marketingSources: marketingSources.rows,
     topRecipes: topRecipes.rows,
     topChefs: topChefs.rows,
   };

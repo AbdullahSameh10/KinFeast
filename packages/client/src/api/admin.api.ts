@@ -57,16 +57,77 @@ export interface AdminDashboard {
   pendingRecipes: AdminPendingRecipe[];
 }
 
+export interface AdminAnalyticsOverview {
+  users: number;
+  chefs: number;
+  recipes: number;
+  publishedRecipes: number;
+  pendingRecipes: number;
+  rejectedRecipes: number;
+  views: number;
+  likes: number;
+  reviews: number;
+}
+export interface AdminAnalyticsActivityPoint {
+  date: string;
+  views: number;
+  recipes: number;
+  users: number;
+}
+export interface AdminAnalyticsStatusPoint {
+  status: "Published" | "Pending" | "Rejected";
+  count: number;
+}
+export interface AdminAnalyticsCategoryPoint {
+  id: number;
+  name: string;
+  count: number;
+}
+export interface AdminAnalyticsCuisinePoint {
+  id: number;
+  name: string;
+  count: number;
+}
+export interface AdminAnalyticsTopRecipe {
+  id: string;
+  title: string;
+  author_name: string;
+  category_name: string | null;
+  views: number;
+  likes: number;
+  reviews: number;
+}
 
-export interface AdminAnalyticsOverview { users: number; chefs: number; recipes: number; publishedRecipes: number; pendingRecipes: number; rejectedRecipes: number; views: number; likes: number; reviews: number; }
-export interface AdminAnalyticsActivityPoint { date: string; views: number; recipes: number; users: number; }
-export interface AdminAnalyticsStatusPoint { status: "Published" | "Pending" | "Rejected"; count: number; }
-export interface AdminAnalyticsCategoryPoint { id: number; name: string; count: number; }
-export interface AdminAnalyticsCuisinePoint { id: number; name: string; count: number; }
-export interface AdminAnalyticsTopRecipe { id: string; title: string; author_name: string; category_name: string | null; views: number; likes: number; reviews: number; }
-export interface AdminAnalyticsTopChef { id: string; name: string; profile_image: string | null; recipe_count: number; published_count: number; follower_count: number; }
-export interface AdminAnalytics { overview: AdminAnalyticsOverview; activity: AdminAnalyticsActivityPoint[]; recipeStatus: AdminAnalyticsStatusPoint[]; categories: AdminAnalyticsCategoryPoint[]; cuisines: AdminAnalyticsCuisinePoint[]; topRecipes: AdminAnalyticsTopRecipe[]; topChefs: AdminAnalyticsTopChef[]; }
-interface AdminAnalyticsResponse { success: boolean; message?: string; analytics?: AdminAnalytics; }
+export interface AdminAnalyticsMarketingSource {
+  id: string;
+  source_key: string;
+  count: number;
+  percentage: number;
+}
+
+export interface AdminAnalyticsTopChef {
+  id: string;
+  name: string;
+  profile_image: string | null;
+  recipe_count: number;
+  published_count: number;
+  follower_count: number;
+}
+export interface AdminAnalytics {
+  overview: AdminAnalyticsOverview;
+  activity: AdminAnalyticsActivityPoint[];
+  recipeStatus: AdminAnalyticsStatusPoint[];
+  categories: AdminAnalyticsCategoryPoint[];
+  cuisines: AdminAnalyticsCuisinePoint[];
+  marketingSources: AdminAnalyticsMarketingSource[];
+  topRecipes: AdminAnalyticsTopRecipe[];
+  topChefs: AdminAnalyticsTopChef[];
+}
+interface AdminAnalyticsResponse {
+  success: boolean;
+  message?: string;
+  analytics?: AdminAnalytics;
+}
 
 interface AdminDashboardResponse {
   success: boolean;
@@ -254,14 +315,18 @@ export const getAdminDashboard = async (): Promise<AdminDashboard> => {
   return response.data.dashboard;
 };
 
-export const approveAdminRecipe = async (recipeId: string): Promise<RecipeModerationResponse> =>
+export const approveAdminRecipe = async (
+  recipeId: string,
+): Promise<RecipeModerationResponse> =>
   (
     await apiClient.patch<RecipeModerationResponse>(
       `/admin/recipes/${recipeId}/approve`,
     )
   ).data;
 
-export const rejectAdminRecipe = async (recipeId: string): Promise<RecipeModerationResponse> =>
+export const rejectAdminRecipe = async (
+  recipeId: string,
+): Promise<RecipeModerationResponse> =>
   (
     await apiClient.patch<RecipeModerationResponse>(
       `/admin/recipes/${recipeId}/reject`,
@@ -311,25 +376,20 @@ export const getAdminChefs = async ({
   page?: number;
   limit?: number;
 }): Promise<AdminChefsResult> => {
-  const response = await apiClient.get<AdminChefsResponse>(
-    "/admin/chefs",
-    {
-      params: {
-        search: search || undefined,
-        page,
-        limit,
-      },
+  const response = await apiClient.get<AdminChefsResponse>("/admin/chefs", {
+    params: {
+      search: search || undefined,
+      page,
+      limit,
     },
-  );
+  });
 
   if (
     !response.data.success ||
     !response.data.chefs ||
     !response.data.pagination
   ) {
-    throw new Error(
-      response.data.message || "Unable to load chefs.",
-    );
+    throw new Error(response.data.message || "Unable to load chefs.");
   }
 
   return {
@@ -353,28 +413,23 @@ export const getAdminRecipes = async ({
   page?: number;
   limit?: number;
 }): Promise<AdminRecipesResult> => {
-  const response = await apiClient.get<AdminRecipesResponse>(
-    "/admin/recipes",
-    {
-      params: {
-        search: search || undefined,
-        status: status || undefined,
-        category: category || undefined,
-        cuisine: cuisine || undefined,
-        page,
-        limit,
-      },
+  const response = await apiClient.get<AdminRecipesResponse>("/admin/recipes", {
+    params: {
+      search: search || undefined,
+      status: status || undefined,
+      category: category || undefined,
+      cuisine: cuisine || undefined,
+      page,
+      limit,
     },
-  );
+  });
 
   if (
     !response.data.success ||
     !response.data.recipes ||
     !response.data.pagination
   ) {
-    throw new Error(
-      response.data.message || "Unable to load recipes.",
-    );
+    throw new Error(response.data.message || "Unable to load recipes.");
   }
 
   return {
@@ -387,20 +442,16 @@ export const getAdminRecipeFilters = async (): Promise<{
   categories: AdminRecipeFilter[];
   cuisines: AdminRecipeFilter[];
 }> => {
-  const response =
-    await apiClient.get<AdminRecipeFiltersResponse>(
-      "/admin/recipes/filters",
-    );
+  const response = await apiClient.get<AdminRecipeFiltersResponse>(
+    "/admin/recipes/filters",
+  );
 
   if (
     !response.data.success ||
     !response.data.categories ||
     !response.data.cuisines
   ) {
-    throw new Error(
-      response.data.message ||
-        "Unable to load recipe filters.",
-    );
+    throw new Error(response.data.message || "Unable to load recipe filters.");
   }
 
   return {
@@ -438,8 +489,7 @@ export const getAdminModerationQueue = async ({
     !response.data.pagination
   ) {
     throw new Error(
-      response.data.message ||
-        "Unable to load moderation queue.",
+      response.data.message || "Unable to load moderation queue.",
     );
   }
 
@@ -450,7 +500,8 @@ export const getAdminModerationQueue = async ({
 };
 
 export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
-  const response = await apiClient.get<AdminAnalyticsResponse>("/admin/analytics");
+  const response =
+    await apiClient.get<AdminAnalyticsResponse>("/admin/analytics");
   if (!response.data.success || !response.data.analytics) {
     throw new Error(response.data.message || "Unable to load admin analytics.");
   }
