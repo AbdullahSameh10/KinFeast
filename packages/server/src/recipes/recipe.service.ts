@@ -15,9 +15,10 @@ export const createRecipe = async (
         description,
         instructions,
         cooking_time,
-        difficulty
+        difficulty,
+        recipe_image
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING
         id,
         author_id,
@@ -28,6 +29,7 @@ export const createRecipe = async (
         instructions,
         cooking_time,
         difficulty,
+        recipe_image,
         created_at,
         status
     `,
@@ -40,6 +42,7 @@ export const createRecipe = async (
       input.instructions.trim(),
       input.cooking_time,
       input.difficulty ?? "Easy",
+      input.recipe_image?.trim() || null,
     ],
   );
 
@@ -87,9 +90,14 @@ export const updateRecipe = async (
         category_id = CASE
           WHEN $9::boolean = false THEN category_id
           ELSE $10
+        END,
+
+        recipe_image = CASE
+          WHEN $11::boolean = false THEN recipe_image
+          ELSE $12
         END
 
-      WHERE id = $11
+      WHERE id = $13
 
       RETURNING
         id,
@@ -122,6 +130,9 @@ export const updateRecipe = async (
       input.category_id !== undefined,
       input.category_id ?? null,
 
+      input.recipe_image !== undefined,
+      input.recipe_image?.trim() || null,
+
       recipeId,
     ],
   );
@@ -148,6 +159,7 @@ export const getPublishedRecipes = async () => {
       r.instructions,
       r.cooking_time,
       r.difficulty,
+      r.recipe_image,
       r.created_at,
       r.status
     FROM recipes r
@@ -180,6 +192,7 @@ export const getPublishedRecipeById = async (recipeId: string) => {
         r.instructions,
         r.cooking_time,
         r.difficulty,
+        r.recipe_image,
         r.created_at,
         r.status
       FROM recipes r

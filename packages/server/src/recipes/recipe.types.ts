@@ -8,6 +8,7 @@ export interface CreateRecipeInput {
   instructions: string;
   cooking_time: number;
   difficulty?: RecipeDifficulty;
+  recipe_image?: string | null;
 }
 
 export interface UpdateRecipeInput {
@@ -18,4 +19,5 @@ export interface UpdateRecipeInput {
   cooking_time?: number;
   difficulty?: RecipeDifficulty;
   cuisine_id?: number | null;
+  recipe_image?: string | null;
 }

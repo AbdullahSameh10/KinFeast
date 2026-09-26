@@ -1,4 +1,5 @@
 import { ArrowRight, Bookmark, Clock3, Star, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
 
@@ -54,8 +55,8 @@ function TrendingRecipesSection() {
           </p>
         </div>
 
-        <button
-          type="button"
+        <Link
+          to="/recipes"
           className="group inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-orange-500 transition-colors hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300"
         >
           {t.actions.exploreRecipes}
@@ -64,7 +65,7 @@ function TrendingRecipesSection() {
             size={16}
             className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
           />
-        </button>
+        </Link>
       </div>
 
       {/* Recipe Cards */}

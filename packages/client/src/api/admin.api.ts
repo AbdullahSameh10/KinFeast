@@ -220,6 +220,7 @@ export interface AdminRecipe {
   description: string | null;
   status: "pending" | "published" | "rejected";
   difficulty: string | null;
+  recipe_image: string | null;
   cooking_time: number | null;
   created_at: string;
 
@@ -275,6 +276,7 @@ export interface AdminModerationRecipe {
   description: string | null;
   status: "pending";
   difficulty: "Easy" | "Medium" | "Hard" | string;
+  recipe_image: string | null;
   cooking_time: number | null;
   created_at: string;
 

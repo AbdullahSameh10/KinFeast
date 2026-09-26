@@ -86,6 +86,7 @@ export const getAdminRecipes = async ({
         r.status,
         r.difficulty,
         r.cooking_time,
+        r.recipe_image,
         r.created_at,
 
         u.id AS author_id,
@@ -212,6 +213,7 @@ export const getAdminModerationQueue = async ({
         r.status,
         r.difficulty,
         r.cooking_time,
+        r.recipe_image,
         r.created_at,
 
         u.id AS author_id,

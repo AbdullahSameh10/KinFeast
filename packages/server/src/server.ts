@@ -16,6 +16,7 @@ import viewRoutes from "./views/view.routes.js";
 import cuisineRoutes from "./cuisines/cuisine.routes.js";
 import recipeCategoryRoutes from "./recipe-categories/recipeCategory.routes.js";
 import marketingRoutes from "./marketing/marketing.routes.js";
+import uploadRoutes from "./uploads/upload.routes.js";
 
 dotenv.config();
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api", viewRoutes);
 app.use("/api/cuisines", cuisineRoutes);
 app.use("/api/recipe-categories", recipeCategoryRoutes);
 app.use("/api/marketing", marketingRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 const PORT = Number(process.env.PORT) || 5000;
 

@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE recipes
+  ADD COLUMN IF NOT EXISTS recipe_image TEXT;
+
+COMMIT;

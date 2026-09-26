@@ -1,24 +1,29 @@
 ﻿import { Route, Routes } from "react-router-dom";
 import AppShell from "../components/layout/AppShell";
-import LoginPage from "../pages/Auth/LoginPage";
-import RegisterPage from "../pages/Auth/RegisterPage";
 import GuestRoute from "./GuestRoute";
-import AdminDashboardPage from "../pages/Admin/AdminDashboardPage";
 import RootRoute from "./RootRoute";
-import UserDashboardPage from "../pages/User/UserDashboardPage";
-import ChefDashboardPage from "../pages/Chef/ChefDashboardPage";
 import RoleRoute from "./RoleRoute";
-import AdminUsersPage from "../pages/Admin/AdminUsersPage";
-import AdminChefsPage from "../pages/Admin/AdminChefsPage";
-import AdminRecipesPage from "../pages/Admin/AdminRecipesPage";
-import AdminAnalyticsPage from "../pages/Admin/AdminAnalyticsPage";
-import AdminModerationPage from "../pages/Admin/AdminModerationPage";
+import {
+  AdminAnalyticsPage,
+  AdminChefsPage,
+  AdminDashboardPage,
+  AdminModerationPage,
+  AdminRecipesPage,
+  AdminUsersPage,
+  ChefDashboardPage,
+  LoginPage,
+  RecipesPage,
+  RegisterPage,
+  UserDashboardPage,
+} from "../pages";
 
 function AppRoutes() {
   return (
     <AppShell>
       <Routes>
         <Route path="/" element={<RootRoute />} />
+
+        <Route path="/recipes" element={<RecipesPage />} />
 
         <Route
           path="/dashboard"
