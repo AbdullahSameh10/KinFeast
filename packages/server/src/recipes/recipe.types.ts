@@ -21,3 +21,12 @@ export interface UpdateRecipeInput {
   cuisine_id?: number | null;
   recipe_image?: string | null;
 }
+
+export interface PublishedRecipesQuery {
+  page: number;
+  limit: number;
+  search?: string;
+  categoryId?: number;
+  cuisineId?: number;
+  difficulty?: "Easy" | "Medium" | "Hard";
+}

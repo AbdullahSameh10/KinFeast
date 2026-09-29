@@ -7,7 +7,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   getCuisines,
@@ -21,6 +21,7 @@ import RecipeCard from "../../components/recipes/RecipeCard";
 import RecipeCardSkeleton from "../../components/recipes/RecipeCardSkeleton";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import RecipePagination from "../../components/recipes/RecipePagination";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -29,18 +30,27 @@ function RecipesPage() {
   const t = translations[language].recipes;
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecipes, setTotalRecipes] = useState(0);
+
+  const RECIPES_PER_PAGE = 12;
   const [categories, setCategories] = useState<RecipeCategory[]>([]);
   const [cuisines, setCuisines] = useState<Cuisine[]>([]);
 
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [cuisineId, setCuisineId] = useState("");
-  const [difficulty, setDifficulty] = useState<"" | Difficulty>("");
+  const [difficulty, setDifficulty] = useState<undefined | Difficulty>(
+    undefined,
+  );
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const recipesSectionRef = useRef<HTMLElement | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -48,12 +58,21 @@ function RecipesPage() {
       setError("");
 
       const [recipesData, categoriesData, cuisinesData] = await Promise.all([
-        getRecipes(),
+        getRecipes({
+          page: currentPage,
+          limit: RECIPES_PER_PAGE,
+          search,
+          categoryId,
+          cuisineId,
+          difficulty,
+        }),
         getRecipeCategories(),
         getCuisines(),
       ]);
 
-      setRecipes(recipesData);
+      setRecipes(recipesData.recipes);
+      setTotalPages(recipesData.pagination.totalPages);
+      setTotalRecipes(recipesData.pagination.total);
       setCategories(categoriesData);
       setCuisines(cuisinesData);
     } catch (requestError) {
@@ -67,7 +86,14 @@ function RecipesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [t.error.description]);
+  }, [
+    currentPage,
+    search,
+    categoryId,
+    cuisineId,
+    difficulty,
+    t.error.description,
+  ]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -77,54 +103,28 @@ function RecipesPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loadData]);
 
-  const filteredRecipes = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    return recipes.filter((recipe) => {
-      const matchesSearch =
-        !normalizedSearch ||
-        [
-          recipe.title,
-          recipe.description,
-          recipe.author_name,
-          recipe.cuisine_name,
-          recipe.category_name,
-        ]
-          .filter(Boolean)
-          .some((value) => String(value).toLowerCase().includes(normalizedSearch));
-
-      const matchesCategory =
-        !categoryId || String(recipe.category_id) === categoryId;
-
-      const matchesCuisine =
-        !cuisineId || String(recipe.cuisine_id) === cuisineId;
-
-      const matchesDifficulty =
-        !difficulty || recipe.difficulty === difficulty;
-
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesCuisine &&
-        matchesDifficulty
-      );
-    });
-  }, [recipes, search, categoryId, cuisineId, difficulty]);
-
   const hasActiveFilters =
     search.trim() !== "" ||
     categoryId !== "" ||
     cuisineId !== "" ||
-    difficulty !== "";
+    difficulty !== undefined;
 
   const resetFilters = () => {
     setSearch("");
     setCategoryId("");
     setCuisineId("");
-    setDifficulty("");
+    setDifficulty(undefined);
   };
 
-  const resultCount = filteredRecipes.length;
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setCurrentPage(1);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [search, categoryId, cuisineId, difficulty]);
+
+  const resultCount = totalRecipes;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 via-orange-50/30 to-stone-50 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
@@ -138,11 +138,11 @@ function RecipesPage() {
               {t.badge}
             </span>
 
-            <h1 className="mt-5 text-4xl font-black tracking-tight text-stone-950 sm:text-5xl lg:text-6xl dark:text-white">
+            <h1 className="mt-5 text-4xl font-black tracking-tight text-stone-950 dark:text-white sm:text-5xl lg:text-6xl">
               {t.title}
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-8 text-stone-600 sm:text-lg dark:text-stone-400">
+            <p className="mt-5 max-w-2xl text-base leading-8 text-stone-600 dark:text-stone-400 sm:text-lg">
               {t.description}
             </p>
           </div>
@@ -174,7 +174,7 @@ function RecipesPage() {
                   type="button"
                   onClick={() => setSearch("")}
                   aria-label={t.accessibility.clearSearch}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-2 text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-800 dark:hover:text-stone-200 rtl:right-auto rtl:left-4"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-2 text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-800 dark:hover:text-stone-200 rtl:left-4 rtl:right-auto"
                 >
                   <X size={18} />
                 </button>
@@ -209,9 +209,7 @@ function RecipesPage() {
         <div className="grid gap-8 lg:grid-cols-[270px_minmax(0,1fr)]">
           {/* Filters */}
           <aside
-            className={`${
-              mobileFiltersOpen ? "block" : "hidden"
-            } lg:block`}
+            className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}
           >
             <div className="sticky top-24 rounded-3xl border border-stone-200/80 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-stone-900">
               <div className="flex items-center justify-between gap-4">
@@ -261,9 +259,9 @@ function RecipesPage() {
                 {/* Difficulty */}
                 <FilterSelect
                   label={t.filters.difficulty}
-                  value={difficulty}
+                  value={difficulty ?? ""}
                   onChange={(value) =>
-                    setDifficulty(value as "" | Difficulty)
+                    setDifficulty(value as undefined | Difficulty)
                   }
                   options={[
                     {
@@ -297,16 +295,14 @@ function RecipesPage() {
           </aside>
 
           {/* Results */}
-          <section className="min-w-0">
+          <section ref={recipesSectionRef} className="min-w-0">
             <div className="mb-6 hidden items-center justify-between lg:flex">
               <div>
                 <p className="text-sm font-medium text-stone-500 dark:text-stone-400">
                   {isLoading
                     ? t.loading.title
                     : `${resultCount} ${
-                        resultCount === 1
-                          ? t.results.recipe
-                          : t.results.recipes
+                        resultCount === 1 ? t.results.recipe : t.results.recipes
                       } ${t.results.found}`}
                 </p>
               </div>
@@ -362,16 +358,35 @@ function RecipesPage() {
             )}
 
             {/* Results */}
-            {!isLoading && !error && filteredRecipes.length > 0 && (
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {filteredRecipes.map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
-                ))}
-              </div>
+            {!isLoading && !error && recipes.length > 0 && (
+              <>
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {recipes.map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                  ))}
+                </div>
+
+                <RecipePagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);
+
+                    window.requestAnimationFrame(() => {
+                      recipesSectionRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    });
+                  }}
+                  previousLabel={t.pagination.previous}
+                  nextLabel={t.pagination.next}
+                />
+              </>
             )}
 
             {/* Empty */}
-            {!isLoading && !error && filteredRecipes.length === 0 && (
+            {!isLoading && !error && recipes.length === 0 && (
               <div className="flex min-h-[380px] flex-col items-center justify-center rounded-3xl border border-dashed border-stone-300 bg-white/70 px-6 text-center dark:border-stone-700 dark:bg-stone-900/50">
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-500 dark:bg-orange-950/40 dark:text-orange-400">
                   <Search size={27} />
@@ -448,7 +463,7 @@ function FilterSelect({
         <ChevronDown
           size={16}
           aria-hidden="true"
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 rtl:right-auto rtl:left-3"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 rtl:left-3 rtl:right-auto"
         />
       </div>
     </div>

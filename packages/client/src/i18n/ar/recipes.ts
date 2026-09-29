@@ -42,7 +42,7 @@ export const recipes = {
     viewRecipe: "عرض الوصفة",
     noDescription: "وصفة شهية بانتظار اكتشافها.",
     favorite: "حفظ في المفضلة",
-unfavorite: "إزالة من المفضلة",
+    unfavorite: "إزالة من المفضلة",
   },
 
   loading: {
@@ -60,5 +60,11 @@ unfavorite: "إزالة من المفضلة",
     searchIcon: "بحث",
     clearSearch: "مسح البحث",
     openRecipe: "فتح الوصفة",
+  },
+
+  pagination: {
+    previous: "الصفحة السابقة",
+    next: "الصفحة التالية",
+    page: "صفحة",
   },
 } as const;

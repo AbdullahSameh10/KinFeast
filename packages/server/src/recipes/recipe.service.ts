@@ -1,5 +1,7 @@
 import pool from "../config/database.js";
-import type { CreateRecipeInput, UpdateRecipeInput } from "./recipe.types.js";
+import type { CreateRecipeInput, PublishedRecipesQuery, UpdateRecipeInput } from "./recipe.types.js";
+
+
 
 export const createRecipe = async (
   authorId: string,
@@ -144,36 +146,121 @@ export const updateRecipe = async (
   return result.rows[0];
 };
 
-export const getPublishedRecipes = async () => {
-  const result = await pool.query(`
-    SELECT
-      r.id,
-      r.author_id,
-      u.name AS author_name,
-      r.cuisine_id,
-      r.category_id,
-      c.name AS cuisine_name,
-      rc.name AS category_name,
-      r.title,
-      r.description,
-      r.instructions,
-      r.cooking_time,
-      r.difficulty,
-      r.recipe_image,
-      r.created_at,
-      r.status
-    FROM recipes r
-    JOIN users u
-      ON r.author_id = u.id
-    LEFT JOIN cuisines c
-      ON r.cuisine_id = c.id
-    JOIN recipe_categories rc
-      ON r.category_id = rc.id
-    WHERE r.status = 'published'
-    ORDER BY r.created_at DESC
-  `);
+export const getPublishedRecipes = async ({
+  page,
+  limit,
+  search,
+  categoryId,
+  cuisineId,
+  difficulty,
+}: PublishedRecipesQuery) => {
+  const offset = (page - 1) * limit;
 
-  return result.rows;
+  const values: Array<string | number> = [];
+  const conditions = [`r.status = 'published'`];
+
+  const addValue = (value: string | number) => {
+    values.push(value);
+    return `$${values.length}`;
+  };
+
+  if (search) {
+    const searchParam = addValue(`%${search}%`);
+
+    conditions.push(`
+      (
+        r.title ILIKE ${searchParam}
+        OR r.description ILIKE ${searchParam}
+        OR u.name ILIKE ${searchParam}
+        OR c.name ILIKE ${searchParam}
+        OR rc.name ILIKE ${searchParam}
+      )
+    `);
+  }
+
+  if (categoryId !== undefined) {
+    const categoryParam = addValue(categoryId);
+    conditions.push(`r.category_id = ${categoryParam}`);
+  }
+
+  if (cuisineId !== undefined) {
+    const cuisineParam = addValue(cuisineId);
+    conditions.push(`r.cuisine_id = ${cuisineParam}`);
+  }
+
+  if (difficulty !== undefined) {
+    const difficultyParam = addValue(difficulty);
+    conditions.push(`r.difficulty = ${difficultyParam}`);
+  }
+
+  const whereClause = conditions.join("\nAND ");
+
+  const countResult = await pool.query(
+    `
+      SELECT COUNT(*)::integer AS total
+      FROM recipes r
+      JOIN users u
+        ON r.author_id = u.id
+      LEFT JOIN cuisines c
+        ON r.cuisine_id = c.id
+      JOIN recipe_categories rc
+        ON r.category_id = rc.id
+      WHERE ${whereClause}
+    `,
+    values,
+  );
+
+  const total = countResult.rows[0]?.total ?? 0;
+
+  const dataValues = [...values];
+
+  const limitParam = `$${dataValues.length + 1}`;
+  const offsetParam = `$${dataValues.length + 2}`;
+
+  dataValues.push(limit, offset);
+
+  const result = await pool.query(
+    `
+      SELECT
+        r.id,
+        r.author_id,
+        u.name AS author_name,
+        r.cuisine_id,
+        r.category_id,
+        c.name AS cuisine_name,
+        rc.name AS category_name,
+        r.title,
+        r.description,
+        r.instructions,
+        r.cooking_time,
+        r.difficulty,
+        r.recipe_image,
+        r.created_at,
+        r.status
+      FROM recipes r
+      JOIN users u
+        ON r.author_id = u.id
+      LEFT JOIN cuisines c
+        ON r.cuisine_id = c.id
+      JOIN recipe_categories rc
+        ON r.category_id = rc.id
+      WHERE ${whereClause}
+      ORDER BY r.created_at DESC, r.id DESC
+      LIMIT ${limitParam}
+      OFFSET ${offsetParam}
+    `,
+    dataValues,
+  );
+
+  return {
+    recipes: result.rows,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const getPublishedRecipeById = async (recipeId: string) => {

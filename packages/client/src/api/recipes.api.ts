@@ -31,9 +31,17 @@ export interface Cuisine {
   created_at: string;
 }
 
+export interface RecipesPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 interface RecipesResponse {
   success: boolean;
   recipes: Recipe[];
+  pagination: RecipesPagination;
   message?: string;
 }
 
@@ -49,14 +57,42 @@ interface CuisinesResponse {
   message?: string;
 }
 
-export async function getRecipes(): Promise<Recipe[]> {
-  const response = await apiClient.get<RecipesResponse>("/recipes");
+export interface GetRecipesParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  categoryId?: string;
+  cuisineId?: string;
+  difficulty?: "Easy" | "Medium" | "Hard";
+}
+
+export interface PaginatedRecipes {
+  recipes: Recipe[];
+  pagination: RecipesPagination;
+}
+
+export async function getRecipes(
+  params: GetRecipesParams = {},
+): Promise<PaginatedRecipes> {
+  const response = await apiClient.get<RecipesResponse>("/recipes", {
+    params: {
+      page: params.page ?? 1,
+      limit: params.limit ?? 12,
+      search: params.search || undefined,
+      category_id: params.categoryId || undefined,
+      cuisine_id: params.cuisineId || undefined,
+      difficulty: params.difficulty || undefined,
+    },
+  });
 
   if (!response.data.success) {
     throw new Error(response.data.message ?? "Unable to fetch recipes.");
   }
 
-  return response.data.recipes;
+  return {
+    recipes: response.data.recipes,
+    pagination: response.data.pagination,
+  };
 }
 
 export async function getRecipeCategories(): Promise<RecipeCategory[]> {

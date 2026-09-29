@@ -227,15 +227,83 @@ export const updateRecipeController = async (
 };
 
 export const getRecipes = async (
-  _req: Request,
+  req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    const recipes = await getPublishedRecipes();
+    const rawPage = Number(req.query.page ?? 1);
+    const rawLimit = Number(req.query.limit ?? 12);
+
+    const page =
+      Number.isInteger(rawPage) && rawPage > 0
+        ? rawPage
+        : 1;
+
+    const limit =
+      Number.isInteger(rawLimit) && rawLimit > 0
+        ? Math.min(rawLimit, 48)
+        : 12;
+
+    const search =
+      typeof req.query.search === "string"
+        ? req.query.search.trim()
+        : undefined;
+
+    const categoryId =
+      typeof req.query.category_id === "string" &&
+      req.query.category_id.trim() !== ""
+        ? Number(req.query.category_id)
+        : undefined;
+
+    const cuisineId =
+      typeof req.query.cuisine_id === "string" &&
+      req.query.cuisine_id.trim() !== ""
+        ? Number(req.query.cuisine_id)
+        : undefined;
+
+    const difficulty =
+      typeof req.query.difficulty === "string" &&
+      ["Easy", "Medium", "Hard"].includes(req.query.difficulty)
+        ? (req.query.difficulty as "Easy" | "Medium" | "Hard")
+        : undefined;
+
+    if (
+      categoryId !== undefined &&
+      (!Number.isInteger(categoryId) || categoryId <= 0)
+    ) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid category filter.",
+      });
+
+      return;
+    }
+
+    if (
+      cuisineId !== undefined &&
+      (!Number.isInteger(cuisineId) || cuisineId <= 0)
+    ) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid cuisine filter.",
+      });
+
+      return;
+    }
+
+    const result = await getPublishedRecipes({
+      page,
+      limit,
+      search,
+      categoryId,
+      cuisineId,
+      difficulty,
+    });
 
     res.status(200).json({
       success: true,
-      recipes,
+      recipes: result.recipes,
+      pagination: result.pagination,
     });
   } catch (error) {
     console.error("Get recipes error:", error);

@@ -61,4 +61,10 @@ export const recipes = {
     clearSearch: "Clear search",
     openRecipe: "Open recipe",
   },
+
+  pagination: {
+    previous: "Previous page",
+    next: "Next page",
+    page: "Page",
+  },
 } as const;
