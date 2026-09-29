@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChefHat, Clock3, Utensils, Heart } from "lucide-react";
+import { ArrowUpRight, Heart, Utensils } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -17,6 +17,25 @@ interface RecipeCardProps {
   recipe: Recipe;
 }
 
+/** Difficulty is shown as a 3-step meter instead of a traffic-light badge. */
+const DIFFICULTY_LEVEL: Record<Recipe["difficulty"], number> = {
+  Easy: 1,
+  Medium: 2,
+  Hard: 3,
+};
+
+/**
+ * Static Tailwind class strings per difficulty step.
+ * Tailwind scans source code for complete class names, so dynamic
+ * interpolation like `bg-[${color}]` will NOT work. Full classes must
+ * appear as literal strings.
+ */
+const DIFFICULTY_METER_COLORS: Record<number, string> = {
+  1: "bg-emerald-700 dark:bg-emerald-400",
+  2: "bg-orange-400 dark:bg-orange-600",
+  3: "bg-red-600 dark:bg-red-600",
+};
+
 function RecipeCard({ recipe }: RecipeCardProps) {
   const { language } = useLanguage();
   const { user } = useAuth();
@@ -27,12 +46,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
-  const difficultyClass = {
-    Easy: "bg-emerald-50/95 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-950/70 dark:text-emerald-300 dark:ring-emerald-400/20",
-    Medium:
-      "bg-amber-50/95 text-amber-700 ring-amber-600/20 dark:bg-amber-950/70 dark:text-amber-300 dark:ring-amber-400/20",
-    Hard: "bg-rose-50/95 text-rose-700 ring-rose-600/20 dark:bg-rose-950/70 dark:text-rose-300 dark:ring-rose-400/20",
-  }[recipe.difficulty];
+  const level = DIFFICULTY_LEVEL[recipe.difficulty] ?? 1;
 
   useEffect(() => {
     let cancelled = false;
@@ -79,43 +93,47 @@ function RecipeCard({ recipe }: RecipeCardProps) {
   };
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-sm ring-1 ring-transparent transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:ring-orange-100/60 focus-within:ring-2 focus-within:ring-orange-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-orange-900/60 dark:hover:ring-orange-900/20">
-      {/* Visual header */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-orange-100 via-amber-50 to-stone-100 dark:from-orange-950/50 dark:via-stone-900 dark:to-stone-950">
+    <article className="group relative flex h-full flex-col rounded-[1.75rem] bg-white p-2 ring-1 ring-stone-900/10 transition-all duration-300 focus-within:ring-2 focus-within:ring-emerald-600 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_24px_48px_-24px_rgba(28,25,23,0.45)] motion-reduce:transition-none dark:bg-stone-900 dark:ring-white/10 dark:focus-within:ring-emerald-400">
+      {/* Photo "plate": the image sits inside the card frame with its own radius */}
+      <div className="relative aspect-[5/4] overflow-hidden rounded-[1.25rem] bg-emerald-50 dark:bg-stone-800">
         {recipe.recipe_image && !imageFailed ? (
           <img
             src={recipe.recipe_image}
             alt={recipe.title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             onError={() => setImageFailed(true)}
           />
         ) : (
-          <>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(251,146,60,0.22),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(245,158,11,0.18),transparent_35%)]" />
-            <div className="relative flex h-full items-center justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/60 backdrop-blur-sm dark:bg-stone-950/40">
-                <Utensils
-                  size={38}
-                  strokeWidth={1.5}
-                  className="text-orange-400 transition-transform duration-500 group-hover:scale-110 dark:text-orange-600"
-                />
-              </div>
-            </div>
-          </>
+          <div
+            aria-hidden="true"
+            className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle,rgba(4,120,87,0.16)_1px,transparent_1.5px)] [background-size:14px_14px] dark:bg-[radial-gradient(circle,rgba(110,231,183,0.16)_1px,transparent_1.5px)]"
+          >
+            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-emerald-700 shadow-sm ring-1 ring-emerald-900/10 dark:bg-stone-900 dark:text-emerald-300 dark:ring-white/10">
+              <Utensils size={28} strokeWidth={1.5} />
+            </span>
+          </div>
         )}
 
-        {/* Top gradient for legibility */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/25 via-black/5 to-transparent" />
+        {/* Legibility for the chips */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent" />
 
-        {/* Difficulty badge */}
+        {/* Category */}
+        {recipe.category_name && (
+          <span className="absolute bottom-3 start-3 inline-block max-w-[65%] truncate rounded-full bg-stone-950/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+            {recipe.category_name}
+          </span>
+        )}
+
+        {/* Open indicator: only appears when the card is hovered or focused */}
         <span
-          className={`absolute left-4 top-4 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold shadow-sm ring-1 ring-inset backdrop-blur-md ${difficultyClass}`}
+          aria-hidden="true"
+          className="absolute bottom-3 end-3 flex h-9 w-9 translate-y-1 items-center justify-center rounded-full bg-white text-stone-900 opacity-0 transition-all duration-300 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none"
         >
-          {t.difficulty[recipe.difficulty]}
+          <ArrowUpRight size={18} className="rtl:-scale-x-100" />
         </span>
 
-        {/* Favorite button */}
+        {/* Favorite */}
         {user && (
           <button
             type="button"
@@ -128,10 +146,10 @@ function RecipeCard({ recipe }: RecipeCardProps) {
             aria-label={isFavorited ? t.card.unfavorite : t.card.favorite}
             aria-pressed={isFavorited}
             title={isFavorited ? t.card.unfavorite : t.card.favorite}
-            className={`absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border shadow-lg backdrop-blur-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-stone-900 ${
+            className={`absolute end-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-90 disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none ${
               isFavorited
-                ? "border-orange-200 bg-white text-orange-500 dark:border-orange-900/60 dark:bg-stone-950 dark:text-orange-400"
-                : "border-white/60 bg-white/90 text-stone-600 hover:scale-105 hover:text-orange-500 dark:border-stone-700 dark:bg-stone-950/85 dark:text-stone-300 dark:hover:text-orange-400"
+                ? "bg-white text-rose-500"
+                : "bg-stone-950/40 text-white hover:bg-stone-950/60"
             }`}
           >
             <Heart
@@ -141,87 +159,80 @@ function RecipeCard({ recipe }: RecipeCardProps) {
             />
           </button>
         )}
-
-        {/* Category chip pinned to bottom of image */}
-        {recipe.category_name && (
-          <span className="absolute bottom-3 left-4 inline-flex max-w-[70%] truncate rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium tracking-wide text-stone-700 shadow-sm backdrop-blur-md dark:bg-stone-950/80 dark:text-stone-200">
-            {recipe.category_name}
-          </span>
-        )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h2 className="line-clamp-2 text-lg font-bold leading-7 tracking-tight text-stone-900 transition-colors group-hover:text-orange-600 dark:text-white dark:group-hover:text-orange-400">
-              <Link
-                to={`/recipes/${recipe.id}`}
-                className="focus:outline-none"
-                aria-label={`${t.accessibility.openRecipe}: ${recipe.title}`}
-              >
-                {recipe.title}
-                {/* Stretch link so the whole card is clickable */}
-                <span className="absolute inset-0 z-0" aria-hidden="true" />
-              </Link>
-            </h2>
+      {/* Text */}
+      <div className="flex flex-1 flex-col px-4 pb-3 pt-5">
+        <h2 className="line-clamp-2 font-serif text-[1.35rem] font-semibold leading-[1.25] tracking-tight text-stone-900 dark:text-stone-50">
+          <Link
+            to={`/recipes/${recipe.id}`}
+            className="focus:outline-none"
+            aria-label={`${t.accessibility.openRecipe}: ${recipe.title}`}
+          >
+            {recipe.title}
+            {/* Stretched link: the whole card is clickable */}
+            <span className="absolute inset-0 z-0" aria-hidden="true" />
+          </Link>
+        </h2>
 
-            <div className="mt-2 flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
-              <ChefHat size={15} className="shrink-0" />
-              <span className="truncate">
-                {t.card.by}{" "}
-                <span className="font-medium text-stone-700 dark:text-stone-300">
-                  {recipe.author_name}
-                </span>
-              </span>
-            </div>
-          </div>
+        <p className="mt-1.5 truncate text-sm text-stone-500 dark:text-stone-400">
+          {t.card.by}{" "}
+          <span className="font-medium text-stone-800 dark:text-stone-200">
+            {recipe.author_name}
+          </span>
+        </p>
 
-          <ArrowUpRight
-            size={19}
-            aria-hidden="true"
-            className="mt-1 shrink-0 text-stone-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-orange-500 rtl:rotate-[-90deg]"
-          />
-        </div>
-
-        <p className="mt-4 line-clamp-2 text-sm leading-6 text-stone-500 dark:text-stone-400">
+        <p className="mt-3 line-clamp-2 flex-1 text-sm leading-6 text-stone-600 dark:text-stone-400">
           {recipe.description || t.card.noDescription}
         </p>
 
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-stone-100 pt-4 dark:border-stone-800">
-          {recipe.cooking_time !== null && (
-            <div className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
-              <Clock3 size={15} className="shrink-0" />
-              <span>
-                {recipe.cooking_time} {t.card.minutes}
-              </span>
-            </div>
-          )}
+        {/* Nutrition-label style facts: heavy rule on top, hairlines between */}
+        <dl className="mt-5 grid grid-cols-[auto_auto_1fr] border-t-[3px] border-stone-900 pt-3 dark:border-stone-100">
+          {/* Time */}
+          <div className="pe-4">
+            <dd className="flex items-baseline gap-1 font-serif text-3xl font-semibold tabular-nums leading-none text-stone-900 dark:text-stone-50">
+              {recipe.cooking_time !== null ? recipe.cooking_time : "–"}
+              {recipe.cooking_time !== null && (
+                <span className="font-sans text-xs font-medium text-stone-500 dark:text-stone-400">
+                  {t.card.minutes}
+                </span>
+              )}
+            </dd>
+          </div>
 
-          {recipe.cuisine_name && (
-            <div className="flex items-center gap-1.5 text-sm font-medium text-orange-600 dark:text-orange-400">
-              <span
-                aria-hidden="true"
-                className="h-1.5 w-1.5 rounded-full bg-orange-400 dark:bg-orange-500"
-              />
-              <span className="max-w-full truncate">{recipe.cuisine_name}</span>
-            </div>
-          )}
-        </div>
+          {/* Difficulty meter */}
+          <div className="flex flex-col justify-center gap-1.5 border-s border-stone-200 px-4 dark:border-stone-700">
+            <dd
+              className="flex items-center gap-1"
+              role="img"
+              aria-label={t.difficulty[recipe.difficulty]}
+            >
+              {[1, 2, 3].map((step) => (
+                <span
+                  key={step}
+                  aria-hidden="true"
+                  className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
+                    step <= level
+                      ? DIFFICULTY_METER_COLORS[level]
+                      : "bg-stone-200 dark:bg-stone-700"
+                  }`}
+                />
+              ))}
+            </dd>
+            <dd className="text-xs font-medium text-stone-600 dark:text-stone-300">
+              {t.difficulty[recipe.difficulty]}
+            </dd>
+          </div>
 
-        {/* CTA */}
-        <Link
-          to={`/recipes/${recipe.id}`}
-          tabIndex={-1}
-          aria-hidden="true"
-          className="relative z-10 mt-5 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-orange-500 focus:outline-none dark:bg-white dark:text-stone-900 dark:hover:bg-orange-400 dark:hover:text-white"
-        >
-          {t.card.viewRecipe}
-          <ArrowUpRight
-            size={16}
-            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 rtl:rotate-[-90deg]"
-          />
-        </Link>
+          {/* Cuisine */}
+          <div className="flex min-w-0 items-center justify-end border-s border-stone-200 ps-4 dark:border-stone-700">
+            {recipe.cuisine_name && (
+              <dd className="truncate text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+                {recipe.cuisine_name}
+              </dd>
+            )}
+          </div>
+        </dl>
       </div>
     </article>
   );
