@@ -1,8 +1,6 @@
 import pool from "../config/database.js";
 import type { CreateRecipeInput, PublishedRecipesQuery, UpdateRecipeInput } from "./recipe.types.js";
 
-
-
 export const createRecipe = async (
   authorId: string,
   input: CreateRecipeInput,
@@ -111,6 +109,7 @@ export const updateRecipe = async (
         instructions,
         cooking_time,
         difficulty,
+        recipe_image,
         created_at,
         status
     `,

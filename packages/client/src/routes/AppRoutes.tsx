@@ -12,6 +12,7 @@ import {
   AdminUsersPage,
   ChefDashboardPage,
   LoginPage,
+  RecipeDetailsPage,
   RecipesPage,
   RegisterPage,
   UserDashboardPage,
@@ -24,6 +25,8 @@ function AppRoutes() {
         <Route path="/" element={<RootRoute />} />
 
         <Route path="/recipes" element={<RecipesPage />} />
+
+        <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
 
         <Route
           path="/dashboard"

@@ -25,10 +25,14 @@ import { auth as arAuth } from "./ar/auth";
 import { recipes as enRecipes } from "./en/recipes";
 import { recipes as arRecipes } from "./ar/recipes";
 
+import { recipeDetails as enRecipeDetails } from "./en/recipeDetails";
+import { recipeDetails as arRecipeDetails } from "./ar/recipeDetails";
+
 export const translations = {
   en: {
     navbar: enNavbar,
     recipes: enRecipes,
+    recipeDetails: enRecipeDetails,
     hero: enHero,
     cookWithWhatYouHave: enCookWithWhatYouHave,
     categories: enCategories,
@@ -40,6 +44,7 @@ export const translations = {
   ar: {
     navbar: arNavbar,
     recipes: arRecipes,
+    recipeDetails: arRecipeDetails,
     hero: arHero,
     cookWithWhatYouHave: arCookWithWhatYouHave,
     categories: arCategories,
