@@ -165,7 +165,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
       <div className="flex flex-1 flex-col px-4 pb-3 pt-5">
         <h2 className="line-clamp-2 font-serif text-[1.35rem] font-semibold leading-[1.25] tracking-tight text-stone-900 dark:text-stone-50">
           <Link
-            to={`/recipes/${recipe.id}`}
+            to={`/recipes/${recipe.slug}`}
             className="focus:outline-none"
             aria-label={`${t.accessibility.openRecipe}: ${recipe.title}`}
           >

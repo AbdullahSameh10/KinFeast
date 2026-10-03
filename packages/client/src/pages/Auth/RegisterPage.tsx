@@ -35,6 +35,7 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const sourceTranslationKeys = {
   instagram: { name: "instagram", icon: FaInstagram },
@@ -51,6 +52,8 @@ const sourceTranslationKeys = {
 type SourceTranslationKey = keyof typeof sourceTranslationKeys;
 
 export default function RegisterPage() {
+  useDocumentTitle("Register");
+
   const navigate = useNavigate();
   const { register } = useAuth();
   const { language } = useLanguage();
@@ -126,8 +129,10 @@ export default function RegisterPage() {
     }
 
     let isMounted = true;
-    setIsLoadingSources(true);
-    setError("");
+    const timeoutId = window.setTimeout(() => {
+      setIsLoadingSources(true);
+      setError("");
+    }, 0);
 
     getMarketingSources()
       .then((sources) => {
@@ -158,6 +163,7 @@ export default function RegisterPage() {
       });
 
     return () => {
+      window.clearTimeout(timeoutId);
       isMounted = false;
     };
   }, [step, marketingSources.length, t.sourceStep.loadError]);

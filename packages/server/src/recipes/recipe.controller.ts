@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import {
   updateRecipe,
   getPublishedRecipes,
-  getPublishedRecipeById,
+  getPublishedRecipeBySlug,
   approveRecipe,
   rejectRecipe,
   getPendingRecipes,
@@ -315,19 +315,36 @@ export const getRecipes = async (
   }
 };
 
-export const getRecipeById = async (
+export const getRecipeBySlug = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    const recipe = await getPublishedRecipeById(req.params.id as string);
+    const slug =
+      typeof req.params.slug === "string"
+        ? req.params.slug
+        : undefined;
+
+    if (!slug) {
+      res.status(400).json({
+        success: false,
+        message: "Recipe slug is required.",
+      });
+
+      return;
+    }
+
+    const recipe = await getPublishedRecipeBySlug(slug);
 
     res.status(200).json({
       success: true,
       recipe,
     });
   } catch (error) {
-    if (error instanceof Error && error.message === "RECIPE_NOT_FOUND") {
+    if (
+      error instanceof Error &&
+      error.message === "RECIPE_NOT_FOUND"
+    ) {
       res.status(404).json({
         success: false,
         message: "Recipe not found.",

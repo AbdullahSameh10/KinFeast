@@ -18,7 +18,7 @@ export function RecipeErrorState({
   onRetry,
 }: RecipeErrorStateProps) {
   return (
-    <main className="page-container flex min-h-[65vh] items-center justify-center py-16">
+    <main className="page-container flex min-h-[65vh] items-center justify-center py-16 bg-stone-100 dark:bg-stone-900">
       <div className="max-w-lg text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
           <Utensils size={28} />

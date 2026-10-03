@@ -41,7 +41,7 @@ export function ReviewsSection({
     <section className="page-container py-10 sm:py-14 lg:py-16">
       <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
         {/* Summary */}
-        <Card variant="emerald">
+        <Card variant="emerald" className="max-h-80">
           <MessageCircle
             size={24}
             className="text-emerald-600 dark:text-emerald-400"

@@ -4,6 +4,7 @@ export interface Recipe {
   id: number | string;
   author_id: number | string;
   author_name: string;
+  slug: string;
   cuisine_id: number | string | null;
   category_id: number | string;
   cuisine_name: string | null;

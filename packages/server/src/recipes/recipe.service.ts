@@ -1,10 +1,41 @@
 import pool from "../config/database.js";
-import type { CreateRecipeInput, PublishedRecipesQuery, UpdateRecipeInput } from "./recipe.types.js";
+import {
+  slugifyRecipeTitle,
+} from "./recipe.utils.js";
+import type {
+  CreateRecipeInput,
+  PublishedRecipesQuery,
+  UpdateRecipeInput,
+} from "./recipe.types.js";
 
 export const createRecipe = async (
   authorId: string,
   input: CreateRecipeInput,
 ) => {
+  const baseSlug = slugifyRecipeTitle(input.title);
+
+  const existingSlugs = await pool.query<{ slug: string }>(
+    `
+      SELECT slug
+      FROM recipes
+      WHERE slug = $1
+         OR slug LIKE $2
+    `,
+    [baseSlug, `${baseSlug}-%`],
+  );
+
+  const usedSlugs = new Set(
+    existingSlugs.rows.map((row) => row.slug),
+  );
+
+  let slug = baseSlug;
+  let suffix = 2;
+
+  while (usedSlugs.has(slug)) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+
   const result = await pool.query(
     `
       INSERT INTO recipes (
@@ -12,19 +43,21 @@ export const createRecipe = async (
         cuisine_id,
         category_id,
         title,
+        slug,
         description,
         instructions,
         cooking_time,
         difficulty,
         recipe_image
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING
         id,
         author_id,
         cuisine_id,
         category_id,
         title,
+        slug,
         description,
         instructions,
         cooking_time,
@@ -38,6 +71,7 @@ export const createRecipe = async (
       input.cuisine_id ?? null,
       input.category_id,
       input.title.trim(),
+      slug,
       input.description?.trim() ?? null,
       input.instructions.trim(),
       input.cooking_time,
@@ -224,6 +258,7 @@ export const getPublishedRecipes = async ({
         r.id,
         r.author_id,
         u.name AS author_name,
+        r.slug,
         r.cuisine_id,
         r.category_id,
         c.name AS cuisine_name,
@@ -262,13 +297,14 @@ export const getPublishedRecipes = async ({
   };
 };
 
-export const getPublishedRecipeById = async (recipeId: string) => {
+export const getPublishedRecipeBySlug = async ( slug: string ) => {
   const result = await pool.query(
     `
       SELECT
         r.id,
         r.author_id,
         u.name AS author_name,
+        r.slug,
         r.cuisine_id,
         r.category_id,
         c.name AS cuisine_name,
@@ -288,10 +324,10 @@ export const getPublishedRecipeById = async (recipeId: string) => {
         ON r.cuisine_id = c.id
       JOIN recipe_categories rc
         ON r.category_id = rc.id
-      WHERE r.id = $1
+      WHERE r.slug = $1
         AND r.status = 'published'
     `,
-    [recipeId],
+    [slug],
   );
 
   if (result.rows.length === 0) {

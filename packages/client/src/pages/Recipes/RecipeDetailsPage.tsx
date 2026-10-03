@@ -26,24 +26,31 @@ import { InstructionsPanel } from "./../../features/recipe-details/components/In
 import { MediaGallery } from "./../../features/recipe-details/components/MediaGallery";
 import { ReviewsSection } from "./../../features/recipe-details/components/ReviewsSection";
 import { RecipeErrorState } from "./../../features/recipe-details/components/RecipeErrorState";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function RecipeDetailsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { language } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const t = translations[language].recipeDetails;
 
   const details = useRecipeDetails({
-    id,
+    slug,
     isAuthenticated,
     errorMessage: t.errorDescription,
   });
 
+  useDocumentTitle(
+    details.recipe?.title
+      ? details.recipe.title
+      : "Recipe",
+  );
+
   const requireAuth = useCallback(() => navigate("/login"), [navigate]);
 
   const actions = useRecipeActions({
-    id,
+    id: details.recipe ? String(details.recipe.id) : undefined,
     isAuthenticated,
     onRequireAuth: requireAuth,
   });
@@ -57,15 +64,15 @@ function RecipeDetailsPage() {
 
   const handleReviewSubmit = useCallback(
     async (rating: number, comment: string) => {
-      if (!id) return;
+      if (!details.recipe) return;
       try {
-        const newReview = await createRecipeReview(id, rating, comment);
+        const newReview = await createRecipeReview(details.recipe.id, rating, comment);
         details.patch("reviews", [newReview, ...details.reviews]);
       } catch (err) {
         console.error("Review submission error:", err);
       }
     },
-    [id, details],
+    [details],
   );
 
   if (details.isLoading) return <RecipeDetailsSkeleton />;
@@ -117,7 +124,7 @@ function RecipeDetailsPage() {
               </span>
             </div>
 
-            <h1 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight tracking-tight text-stone-950 sm:text-5xl lg:text-6xl dark:text-stone-50">
+            <h1 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight tracking-tight text-stone-950 dark:text-stone-50 sm:text-5xl lg:text-6xl">
               {recipe.title}
             </h1>
 

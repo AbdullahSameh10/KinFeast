@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   createRecipeController,
-  getRecipeById,
+  getRecipeBySlug,
   getRecipes,
   updateRecipeController,
 } from "./recipe.controller.js";
@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/", getRecipes);
 
-router.get("/:id", getRecipeById);
+router.get("/:slug", getRecipeBySlug);
 
 router.post(
   "/",

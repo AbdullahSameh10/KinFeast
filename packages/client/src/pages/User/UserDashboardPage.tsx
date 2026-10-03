@@ -1,7 +1,10 @@
 import { BookOpen, ChefHat, Heart, Users } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function UserDashboardPage() {
+  useDocumentTitle("Dashboard");
+  
   const { user } = useAuth();
 
   return (

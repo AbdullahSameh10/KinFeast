@@ -22,10 +22,13 @@ import RecipeCardSkeleton from "../../components/recipes/RecipeCardSkeleton";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
 import RecipePagination from "../../components/recipes/RecipePagination";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
 function RecipesPage() {
+  useDocumentTitle("Recipes");
+
   const { language } = useLanguage();
   const t = translations[language].recipes;
 

@@ -86,11 +86,11 @@ interface ViewMutationResponse {
   message?: string;
 }
 
-export async function getRecipeById(
-  recipeId: number | string,
+export async function getRecipeBySlug(
+  slug: string,
 ): Promise<Recipe> {
   const response = await apiClient.get<RecipeResponse>(
-    `/recipes/${recipeId}`,
+    `/recipes/${encodeURIComponent(slug)}`,
   );
 
   if (!response.data.success) {

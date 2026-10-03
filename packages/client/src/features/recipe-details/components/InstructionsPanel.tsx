@@ -19,7 +19,7 @@ export function InstructionsPanel({
           <Clock3 size={21} />
         </span>
         <div>
-          <h2 className="font-serif text-2xl font-semibold">{title}</h2>
+          <h2 className="font-serif text-2xl font-semibold text-stone-950 dark:text-stone-50">{title}</h2>
           <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">
             {steps.length}{" "}
             {steps.length === 1 ? stepLabel : `${stepLabel}s`}

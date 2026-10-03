@@ -12,7 +12,7 @@ export function RecipeHero({ image, title, categoryName }: RecipeHeroProps) {
   const showImage = image && !failed;
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] bg-stone-100 shadow-xl ring-1 ring-stone-900/10 dark:bg-stone-800 dark:ring-white/10">
+    <div className="relative flex justify-center overflow-hidden rounded-[2rem] bg-stone-100 shadow-xl ring-1 ring-stone-900/10 dark:bg-stone-800 dark:ring-white/10">
       <div className="aspect-[4/3]">
         {showImage ? (
           <img

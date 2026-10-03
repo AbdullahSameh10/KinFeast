@@ -26,7 +26,7 @@ function AppRoutes() {
 
         <Route path="/recipes" element={<RecipesPage />} />
 
-        <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
+        <Route path="/recipes/:slug" element={<RecipeDetailsPage />} />
 
         <Route
           path="/dashboard"

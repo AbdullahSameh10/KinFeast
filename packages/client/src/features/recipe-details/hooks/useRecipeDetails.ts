@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  getRecipeById,
+  getRecipeBySlug,
   getRecipeIngredients,
   getRecipeMedia,
   getRecipeReviews,
@@ -18,13 +18,13 @@ import {
 import type { Recipe } from "../../../api/recipes.api";
 
 interface UseRecipeDetailsArgs {
-  id: string | undefined;
+  slug: string | undefined;
   isAuthenticated: boolean;
   errorMessage: string;
 }
 
 export function useRecipeDetails({
-  id,
+  slug,
   isAuthenticated,
   errorMessage,
 }: UseRecipeDetailsArgs) {
@@ -42,79 +42,97 @@ export function useRecipeDetails({
   });
 
   const load = useCallback(async () => {
-    if (!id) {
-      setState((s) => ({ ...s, error: errorMessage, isLoading: false }));
-      return;
-    }
+  if (!slug) {
+    setState((s) => ({
+      ...s,
+      error: errorMessage,
+      isLoading: false,
+    }));
 
-    setState((s) => ({ ...s, isLoading: true, error: "" }));
+    return;
+  }
 
-    try {
-      const [
-        recipeData,
-        ingredientsData,
-        mediaData,
-        reviewsData,
-        likesData,
-        viewsData,
-      ] = await Promise.all([
-        getRecipeById(id),
-        getRecipeIngredients(id),
-        getRecipeMedia(id),
-        getRecipeReviews(id),
-        getRecipeLikeCount(id),
-        getRecipeViewCount(id),
-      ]);
+  setState((s) => ({
+    ...s,
+    isLoading: true,
+    error: "",
+  }));
 
-      const base = {
-        recipe: recipeData,
-        ingredients: ingredientsData,
-        media: mediaData,
-        reviews: reviewsData,
-        likeCount: likesData,
-        viewCount: viewsData,
-      };
+  try {
+    const recipeData = await getRecipeBySlug(slug);
 
-      if (isAuthenticated) {
-        const [favoriteStatus, likeStatus] = await Promise.all([
-          getFavoriteStatus(id),
-          getRecipeLikeStatus(id),
+    const [
+      ingredientsData,
+      mediaData,
+      reviewsData,
+      likesData,
+      viewsData,
+    ] = await Promise.all([
+      getRecipeIngredients(recipeData.id),
+      getRecipeMedia(recipeData.id),
+      getRecipeReviews(recipeData.id),
+      getRecipeLikeCount(recipeData.id),
+      getRecipeViewCount(recipeData.id),
+    ]);
+
+    const base = {
+      recipe: recipeData,
+      ingredients: ingredientsData,
+      media: mediaData,
+      reviews: reviewsData,
+      likeCount: likesData,
+      viewCount: viewsData,
+    };
+
+    if (isAuthenticated) {
+      const [favoriteStatus, likeStatus] =
+        await Promise.all([
+          getFavoriteStatus(recipeData.id),
+          getRecipeLikeStatus(recipeData.id),
         ]);
 
-        setState((s) => ({
-          ...s,
-          ...base,
-          isFavorited: favoriteStatus,
-          isLiked: likeStatus,
-          isLoading: false,
-        }));
-
-        // Non-critical view recording
-        recordRecipeView(id)
-          .then(() => getRecipeViewCount(id))
-          .then((count) =>
-            setState((s) => ({ ...s, viewCount: count })),
-          )
-          .catch(() => {});
-      } else {
-        setState((s) => ({
-          ...s,
-          ...base,
-          isFavorited: false,
-          isLiked: false,
-          isLoading: false,
-        }));
-      }
-    } catch (err) {
-      console.error("Recipe details loading error:", err);
       setState((s) => ({
         ...s,
+        ...base,
+        isFavorited: favoriteStatus,
+        isLiked: likeStatus,
         isLoading: false,
-        error:
-          err instanceof Error ? err.message : errorMessage,
+      }));
+
+      recordRecipeView(recipeData.id)
+        .then(() => getRecipeViewCount(recipeData.id))
+        .then((count) =>
+          setState((s) => ({
+            ...s,
+            viewCount: count,
+          })),
+        )
+        .catch(() => {});
+    } else {
+      setState((s) => ({
+        ...s,
+        ...base,
+        isFavorited: false,
+        isLiked: false,
+        isLoading: false,
       }));
     }
-  }, [id, isAuthenticated, errorMessage]);
+  } catch (err) {
+    console.error(
+      "Recipe details loading error:",
+      err,
+    );
+
+    setState((s) => ({
+      ...s,
+      isLoading: false,
+      error:
+        err instanceof Error
+          ? err.message
+          : errorMessage,
+    }));
+  }
+}, [slug, isAuthenticated, errorMessage]);
 
   useEffect(() => {
     const t = window.setTimeout(() => void load(), 0);

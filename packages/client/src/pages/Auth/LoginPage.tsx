@@ -17,8 +17,11 @@ import heroIllustration from "../../assets/hero illustration.png";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function LoginPage() {
+  useDocumentTitle("Login");
+  
   const navigate = useNavigate();
   const { login } = useAuth();
   const { language } = useLanguage();

@@ -52,6 +52,7 @@ export function RecipeActions({
         leftIcon={
           <Heart size={18} className={isLiked ? "fill-current" : ""} />
         }
+        className="hover:border-rose-300 hover:text-rose-700 dark:hover:border-rose-800 dark:hover:text-rose-400"
       >
         {isLiked ? labels.liked : labels.like}
       </Button>
@@ -62,7 +63,7 @@ export function RecipeActions({
         leftIcon={
           shareCopied ? <Check size={18} /> : <Share2 size={18} />
         }
-        className="hover:border-emerald-300 hover:text-emerald-700 dark:hover:border-emerald-800 dark:hover:text-emerald-400"
+        className="hover:border-cyan-300 hover:text-cyan-700 dark:hover:border-cyan-800 dark:hover:text-cyan-400"
       >
         {shareCopied ? labels.copied : labels.share}
       </Button>
