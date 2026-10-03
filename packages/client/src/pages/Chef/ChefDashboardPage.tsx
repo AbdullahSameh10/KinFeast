@@ -6,9 +6,14 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useEffect } from "react";
 
 function ChefDashboardPage() {
   const { user } = useAuth();
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-stone-50 dark:bg-stone-950">

@@ -20,8 +20,15 @@ import RecipeSearchBar from "../../components/recipes/RecipeSearchBar";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
-import { clearRecipeFilters, getInitialRecipeFilters, persistRecipeFilters } from "./../../utils/recipesFiltersStorage";
-import type { Difficulty, RecipeFiltersState } from "./../../types/recipes.types.ts";
+import {
+  clearRecipeFilters,
+  getInitialRecipeFilters,
+  persistRecipeFilters,
+} from "./../../utils/recipesFiltersStorage";
+import type {
+  Difficulty,
+  RecipeFiltersState,
+} from "./../../types/recipes.types.ts";
 
 const RECIPES_PER_PAGE = 12;
 
@@ -59,6 +66,9 @@ function RecipesPage() {
 
   const recipesSectionRef = useRef<HTMLElement | null>(null);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
   useEffect(() => {
     const filters: RecipeFiltersState = {
       search,

@@ -123,6 +123,10 @@ export default function RegisterPage() {
           ? t.passwordStep.fair
           : t.passwordStep.weak;
 
+          useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   useEffect(() => {
     if (step !== 3 || marketingSources.length > 0) {
       return;

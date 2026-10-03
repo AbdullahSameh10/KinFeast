@@ -16,6 +16,7 @@ import {
   rejectAdminRecipe,
   type AdminModerationRecipe,
 } from "../../api/admin.api";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const PAGE_SIZE = 12;
 
@@ -45,6 +46,8 @@ const getInitials = (name: string) =>
     .toUpperCase();
 
 export default function AdminModerationPage() {
+  useDocumentTitle("Moderation Queue");
+
   const [recipes, setRecipes] = useState<AdminModerationRecipe[]>([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -58,6 +61,10 @@ export default function AdminModerationPage() {
     recipe: AdminModerationRecipe;
     action: Action;
   } | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {

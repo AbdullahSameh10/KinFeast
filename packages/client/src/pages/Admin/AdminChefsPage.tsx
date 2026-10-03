@@ -12,6 +12,7 @@ import {
   getAdminChefs,
   type AdminChef,
 } from "../../api/admin.api";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -40,9 +41,15 @@ function ChefAvatar({ chef }: { chef: AdminChef }) {
 }
 
 function AdminChefsPage() {
+  useDocumentTitle("Chefs Controller");
+
   const [chefs, setChefs] = useState<AdminChef[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const [pagination, setPagination] = useState({
     page: 1,

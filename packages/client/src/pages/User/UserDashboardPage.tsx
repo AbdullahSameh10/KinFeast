@@ -1,11 +1,16 @@
 import { BookOpen, ChefHat, Heart, Users } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { useEffect } from "react";
 
 function UserDashboardPage() {
   useDocumentTitle("Dashboard");
   
   const { user } = useAuth();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <main className="min-h-[calc(100vh-5rem)] bg-stone-50 dark:bg-stone-950">

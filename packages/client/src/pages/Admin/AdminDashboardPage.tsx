@@ -33,6 +33,7 @@ import {
 } from "../../api/admin.api";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat(undefined, {
@@ -147,7 +148,9 @@ function EmptyChartState({ message }: { message: string }) {
 }
 
 function AdminDashboardPage() {
+  useDocumentTitle("Admin Dashboard");
   const { user } = useAuth();
+
 
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -156,6 +159,10 @@ function AdminDashboardPage() {
     null,
   );
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
   const loadDashboard = useCallback(async (refresh = false) => {
     try {

@@ -27,6 +27,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { getAdminAnalytics, type AdminAnalytics } from "../../api/admin.api";
 import { Link } from "react-router-dom";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const num = (n: number) => n.toLocaleString();
 
@@ -151,10 +152,16 @@ function Empty() {
 }
 
 function AdminAnalyticsPage() {
+  useDocumentTitle("Analytics");
+
   const [a, setA] = useState<AdminAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const load = useCallback(async (refresh = false) => {
     try {

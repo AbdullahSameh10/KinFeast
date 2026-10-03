@@ -12,6 +12,7 @@ import {
   getAdminUsers,
   type AdminUser,
 } from "../../api/admin.api";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const ROLE_LABELS = {
   user: "User",
@@ -70,6 +71,8 @@ function UserAvatar({ user }: { user: AdminUser }) {
 }
 
 function AdminUsersPage() {
+  useDocumentTitle("Users Controller");
+
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [search, setSearch] = useState("");
   const [role, setRole] = useState<
@@ -86,6 +89,10 @@ function AdminUsersPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

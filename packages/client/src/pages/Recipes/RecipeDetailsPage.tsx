@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -34,6 +34,10 @@ function RecipeDetailsPage() {
   const { language } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const t = translations[language].recipeDetails;
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
   const details = useRecipeDetails({
     slug,

@@ -13,6 +13,7 @@ import {
   type AdminRecipe,
   type AdminRecipeFilter,
 } from "../../api/admin.api";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const PAGE_SIZE = 12;
 
@@ -63,6 +64,8 @@ const getStatusLabel = (status: string) =>
   status.charAt(0).toUpperCase() + status.slice(1);
 
 export default function AdminRecipesPage() {
+  useDocumentTitle("Recipes Controller");
+
   const [recipes, setRecipes] = useState<AdminRecipe[]>([]);
   const [categories, setCategories] = useState<AdminRecipeFilter[]>([]);
   const [cuisines, setCuisines] = useState<AdminRecipeFilter[]>([]);
@@ -82,6 +85,10 @@ export default function AdminRecipesPage() {
   const [filtersLoading, setFiltersLoading] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_error, setError] = useState("");
+
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {

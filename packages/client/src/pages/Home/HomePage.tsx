@@ -5,10 +5,13 @@ import TrendingRecipesSection from "../../components/home/TrendingRecipesSection
 import WhoWeAreSection from "../../components/home/WhoWeAreSection";
 import SectionDivider from "../../components/layout/SectionDivider";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { useEffect } from "react";
 
 function HomePage() {
   useDocumentTitle("Discover Delicious Recipes");
-  
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-stone-50 via-orange-50/30 to-stone-50 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
       {/* Hero Section */}
