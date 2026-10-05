@@ -14,7 +14,7 @@ import RecipeCardSkeleton from "../../components/recipes/RecipeCardSkeleton";
 import RecipeEmptyState from "../../components/recipes/RecipeEmptyState";
 import RecipeErrorState from "../../components/recipes/RecipeErrorState";
 import RecipeFiltersSidebar from "../../components/recipes/RecipeFiltersSidebar";
-import RecipePagination from "../../components/recipes/RecipePagination";
+import Pagination from "../../components/ui/Pagination.tsx";
 import RecipeResultsHeader from "../../components/recipes/RecipeResultsHeader";
 import RecipeSearchBar from "../../components/recipes/RecipeSearchBar";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
@@ -325,7 +325,7 @@ function RecipesPage() {
                   ))}
                 </div>
 
-                <RecipePagination
+                <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}

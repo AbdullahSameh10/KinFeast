@@ -8,7 +8,9 @@ export { default as AdminUsersPage } from "./Admin/AdminUsersPage";
 export { default as LoginPage } from "./Auth/LoginPage";
 export { default as RegisterPage } from "./Auth/RegisterPage";
 
-export { default as ChefDashboardPage } from "./Chef/ChefDashboardPage";
+export { default as ChefDashboardPage } from "./Chef-Dashboard/ChefDashboardPage";
+
+export { default as ChefsPage } from "./Chefs/ChefsPage";
 
 export { default as HomePage } from "./Home/HomePage";
 

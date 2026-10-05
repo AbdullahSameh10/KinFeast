@@ -12,7 +12,7 @@ interface RecipePaginationProps {
   nextLabel?: string;
 }
 
-function RecipePagination({
+function Pagination({
   currentPage,
   totalPages,
   onPageChange,
@@ -184,4 +184,4 @@ function RecipePagination({
   );
 }
 
-export default RecipePagination;
+export default Pagination;

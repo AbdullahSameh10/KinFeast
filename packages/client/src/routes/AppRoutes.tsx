@@ -11,6 +11,7 @@ import {
   AdminRecipesPage,
   AdminUsersPage,
   ChefDashboardPage,
+  ChefsPage,
   LoginPage,
   RecipeDetailsPage,
   RecipesPage,
@@ -27,6 +28,8 @@ function AppRoutes() {
         <Route path="/recipes" element={<RecipesPage />} />
 
         <Route path="/recipes/:slug" element={<RecipeDetailsPage />} />
+
+        <Route path="/chefs" element={<ChefsPage />} />
 
         <Route
           path="/dashboard"
