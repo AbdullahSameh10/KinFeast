@@ -23,64 +23,11 @@ function RecipePagination({
     return null;
   }
 
-  /*
-   * Desktop pagination
-   *
-   * Example:
-   * 1 2 3 4 5 6 7
-   *
-   * or:
-   * 1 ... 8 9 10 ... 42
-   */
-  const desktopPages: Array<number | "ellipsis"> = [];
-
-  if (totalPages <= 7) {
-    for (let page = 1; page <= totalPages; page += 1) {
-      desktopPages.push(page);
-    }
-  } else {
-    desktopPages.push(1);
-
-    if (currentPage > 4) {
-      desktopPages.push("ellipsis");
-    }
-
-    const start = Math.max(2, currentPage - 1);
-    const end = Math.min(totalPages - 1, currentPage + 1);
-
-    for (let page = start; page <= end; page += 1) {
-      desktopPages.push(page);
-    }
-
-    if (currentPage < totalPages - 3) {
-      desktopPages.push("ellipsis");
-    }
-
-    desktopPages.push(totalPages);
-  }
-
-  /*
-   * Mobile pagination
-   *
-   * We intentionally keep this compact so it never
-   * needs to create a second row.
-   *
-   * Examples:
-   *
-   * Page 1:
-   * 1 2 3 ... 7
-   *
-   * Page 4:
-   * 1 ... 3 4 5 ... 7
-   *
-   * Page 7:
-   * 1 ... 5 6 7
-   */
-  const mobilePages: Array<number | "ellipsis"> = [];
+  const pages: Array<number | "ellipsis"> = [];
 
   if (totalPages <= 5) {
     for (let page = 1; page <= totalPages; page += 1) {
-      mobilePages.push(page);
+      pages.push(page);
     }
   } else {
     // 3-page window, clamped to the edges
@@ -109,9 +56,9 @@ function RecipePagination({
     // Insert an ellipsis wherever there is a gap
     sorted.forEach((page, i) => {
       if (i > 0 && page - sorted[i - 1] > 1) {
-        mobilePages.push("ellipsis");
+        pages.push("ellipsis");
       }
-      mobilePages.push(page);
+      pages.push(page);
     });
   }
 
@@ -183,7 +130,7 @@ function RecipePagination({
           />
         </button>
 
-        {desktopPages.map((page, index) =>
+        {pages.map((page, index) =>
           renderPage(page, index),
         )}
 
@@ -216,7 +163,7 @@ function RecipePagination({
           />
         </button>
 
-        {mobilePages.map((page, index) =>
+        {pages.map((page, index) =>
           renderPage(page, index, true),
         )}
 
