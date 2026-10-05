@@ -20,6 +20,13 @@
           "Cuisines A–Z",
           "Meal Planning Tools",
         ],
+        hrefs: [
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+        ]
       },
       community: {
         title: "Community",
@@ -30,6 +37,13 @@
           "Become a Contributor",
           "Community Guidelines",
         ],
+        hrefs: [
+          "#",
+          "#",
+          "#",
+          "#",
+          "#",
+        ]
       },
       company: {
         title: "Company",
@@ -41,6 +55,13 @@
           "Contact Us",
         ],
         hiringBadge: "We're hiring",
+        hrefs: [
+          "/about",
+          "#",
+          "#",
+          "#",
+          "#",
+        ]
       },
     },
     newsletter: {

@@ -4,6 +4,7 @@ import GuestRoute from "./GuestRoute";
 import RootRoute from "./RootRoute";
 import RoleRoute from "./RoleRoute";
 import {
+  AboutPage,
   AdminAnalyticsPage,
   AdminChefsPage,
   AdminDashboardPage,
@@ -48,6 +49,8 @@ function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        <Route path="/about" element={<AboutPage />} />
 
         <Route
           path="/admin"

@@ -146,7 +146,7 @@ function Footer() {
                     {col.links.map((item) => (
                       <li key={item}>
                         <Link
-                          to="#"
+                          to={col.hrefs[col.links.indexOf(item)]}
                           className="group flex items-center text-sm text-stone-600 transition-colors hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
                         >
                           <span className="relative">

@@ -31,12 +31,16 @@ import { recipeDetails as arRecipeDetails } from "./ar/recipeDetails";
 import { chefs as enChefs } from "./en/chefs";
 import { chefs as arChefs } from "./ar/chefs";
 
+import { about as enAbout } from "./en/about";
+import { about as arAbout } from "./ar/about";
+
 export const translations = {
   en: {
     navbar: enNavbar,
     recipes: enRecipes,
     recipeDetails: enRecipeDetails,
     chefs: enChefs,
+    about: enAbout,
     hero: enHero,
     cookWithWhatYouHave: enCookWithWhatYouHave,
     categories: enCategories,
@@ -50,6 +54,7 @@ export const translations = {
     recipes: arRecipes,
     recipeDetails: arRecipeDetails,
     chefs: arChefs,
+    about: arAbout,
     hero: arHero,
     cookWithWhatYouHave: arCookWithWhatYouHave,
     categories: arCategories,
