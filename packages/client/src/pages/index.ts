@@ -22,3 +22,5 @@ export { default as AboutPage } from "./About/AboutPage";
 export { default as ContactPage } from "./Contact/ContactPage";
 
 export { default as UserDashboardPage } from "./User/UserDashboardPage";
+
+export { default as NotFoundPage } from "./NotFoundPage";

@@ -37,6 +37,9 @@ import { about as arAbout } from "./ar/about";
 import { contact as enContact } from "./en/contact";
 import { contact as arContact } from "./ar/contact";
 
+import { notFound as enNotFound } from "./en/notFound";
+import { notFound as arNotFound } from "./ar/notFound";
+
 export const translations = {
   en: {
     navbar: enNavbar,
@@ -52,6 +55,7 @@ export const translations = {
     whoWeAre: enWhoWeAre,
     footer: enFooter,
     auth: enAuth,
+    notFound: enNotFound,
   },
   ar: {
     navbar: arNavbar,
@@ -67,5 +71,6 @@ export const translations = {
     whoWeAre: arWhoWeAre,
     footer: arFooter,
     auth: arAuth,
+    notFound: arNotFound,
   },
 } as const;

@@ -15,6 +15,7 @@ import {
   ChefsPage,
   ContactPage,
   LoginPage,
+  NotFoundPage,
   RecipeDetailsPage,
   RecipesPage,
   RegisterPage,
@@ -126,6 +127,8 @@ function AppRoutes() {
             </GuestRoute>
           }
         />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AppShell>
   );

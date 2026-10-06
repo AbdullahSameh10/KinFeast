@@ -7,7 +7,7 @@ import {
   Send,
   Sparkles,
 } from "lucide-react";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 
 import { submitContactMessage } from "../../api/contact.api";
 import { Button } from "../../components/ui/Button";
@@ -25,7 +25,7 @@ const INITIAL_FORM = {
 };
 
 function ContactPage() {
-  useDocumentTitle("Contact Us | KinFeast");
+  useDocumentTitle("Contact Us");
 
   const { language } = useLanguage();
   const t = translations[language].contact;
@@ -39,6 +39,10 @@ function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, []);
 
   const updateField = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

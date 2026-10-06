@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import { useEffect } from "react";
 
 function AboutPage() {
   useDocumentTitle("About KinFeast");
@@ -69,6 +70,10 @@ function AboutPage() {
       description: t.steps.cook.description,
     },
   ];
+
+  useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, []);
 
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-stone-50 via-orange-50/30 to-stone-50 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">

@@ -147,17 +147,15 @@ function Navbar() {
           <img
             src={logoDark}
             alt="KinFeast"
-            width={200}
-            height={53}
-            className="hidden scale-90 dark:block"
+            width={150}
+            className="hidden scale-110 dark:block"
           />
 
           <img
             src={logoLight}
             alt="KinFeast"
-            width={200}
-            height={53}
-            className="block scale-90 dark:hidden"
+            width={150}
+            className="block scale-110 dark:hidden"
           />
         </Link>
 
@@ -497,6 +495,15 @@ function Navbar() {
                 className="rounded-2xl px-4 py-4 text-base font-medium text-stone-700 transition-all duration-200 hover:bg-orange-500/10 hover:text-orange-500 dark:text-stone-200 dark:hover:bg-orange-400/10 dark:hover:text-orange-400"
               >
                 {t.about}
+              </Link>
+              
+              <Link
+                to="/contact"
+                onClick={closeMobileMenu}
+                tabIndex={isMenuOpen ? 0 : -1}
+                className="rounded-2xl px-4 py-4 text-base font-medium text-stone-700 transition-all duration-200 hover:bg-orange-500/10 hover:text-orange-500 dark:text-stone-200 dark:hover:bg-orange-400/10 dark:hover:text-orange-400"
+              >
+                {t.contact}
               </Link>
             </div>
             {/* Divider */}
