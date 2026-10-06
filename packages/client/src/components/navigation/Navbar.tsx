@@ -45,6 +45,7 @@ function Navbar() {
         { label: t.recipes, href: "/recipes" },
         { label: t.chefs, href: "/chefs" },
         { label: t.about, href: "/about" },
+        { label: t.contact, href: "/contact" },
       ]
     : user?.role === "admin"
       ? [
@@ -55,11 +56,13 @@ function Navbar() {
         ? [
             { label: t.dashboard, href: "/chef" },
             { label: t.recipes, href: "/recipes" },
+            { label: t.contact, href: "/contact" },
           ]
         : [
             { label: t.dashboard, href: "/dashboard" },
             { label: t.recipes, href: "/recipes" },
             { label: t.chefs, href: "/chefs" },
+            { label: t.contact, href: "/contact" },
           ];
 
   const handleLanguageChange = (nextLanguage: Language) => {

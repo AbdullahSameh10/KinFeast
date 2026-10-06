@@ -60,7 +60,7 @@
           "#",
           "#",
           "#",
-          "#",
+          "/contact",
         ]
       },
     },
@@ -85,8 +85,8 @@
     },
     contact: {
       email: "hello@kinfeast.com",
-      phone: "+1 (555) 123-4567",
-      address: "San Francisco, CA",
+      phone: "+20 101 9562810",
+      address: "Alexandria, Egypt",
     },
     languageSelectorLabel: "Choose language",
     copyright: "All rights reserved.",

@@ -34,6 +34,9 @@ import { chefs as arChefs } from "./ar/chefs";
 import { about as enAbout } from "./en/about";
 import { about as arAbout } from "./ar/about";
 
+import { contact as enContact } from "./en/contact";
+import { contact as arContact } from "./ar/contact";
+
 export const translations = {
   en: {
     navbar: enNavbar,
@@ -41,6 +44,7 @@ export const translations = {
     recipeDetails: enRecipeDetails,
     chefs: enChefs,
     about: enAbout,
+    contact: enContact,
     hero: enHero,
     cookWithWhatYouHave: enCookWithWhatYouHave,
     categories: enCategories,
@@ -55,6 +59,7 @@ export const translations = {
     recipeDetails: arRecipeDetails,
     chefs: arChefs,
     about: arAbout,
+    contact: arContact,
     hero: arHero,
     cookWithWhatYouHave: arCookWithWhatYouHave,
     categories: arCategories,

@@ -3,6 +3,7 @@
   recipes: "الوصفات",
   chefs: "الطهاة",
   about: "من نحن",
+  contact: "تواصل معنا",
 
   dashboard: "لوحة التحكم",
   community: "المجتمع",

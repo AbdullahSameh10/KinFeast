@@ -3,6 +3,7 @@
   recipes: "Recipes",
   chefs: "Chefs",
   about: "About",
+  contact: "Contact Us",
 
   dashboard: "Dashboard",
   community: "Community",

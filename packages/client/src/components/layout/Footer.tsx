@@ -112,7 +112,10 @@ function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
                 <Phone size={16} className="text-orange-400" />
-                <span>{t.contact.phone}</span>
+                <a
+                  href={`tel:${translations["en"].footer.contact.phone.replace(/\s+/g, "")}`}
+                  className="hover:text-orange-500"
+                >{t.contact.phone}</a>
               </div>
               <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
                 <MapPin size={16} className="text-orange-400" />
