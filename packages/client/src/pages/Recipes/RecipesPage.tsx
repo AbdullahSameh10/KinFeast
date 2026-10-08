@@ -1,5 +1,6 @@
-import { SlidersHorizontal } from "lucide-react";
+import { Flame, SlidersHorizontal } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   getCuisines,
@@ -249,7 +250,35 @@ function RecipesPage() {
       </section>
 
       {/* Main */}
-      <main className="page-container py-10 sm:py-12 lg:py-16">
+<main className="page-container py-10 sm:py-12 lg:py-16">
+  {/* Trending discovery */}
+  <div className="mb-8 overflow-hidden rounded-[1.75rem] border border-orange-200/80 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 p-5 shadow-sm dark:border-orange-900/50 dark:from-orange-950/30 dark:via-amber-950/20 dark:to-orange-950/30 sm:p-6">
+    <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-start gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-sm">
+          <Flame size={21} />
+        </div>
+
+        <div>
+          <p className="text-sm font-bold text-orange-700 dark:text-orange-300">
+            {t.discovery.badge}
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-stone-600 dark:text-stone-400">
+            {t.discovery.description}
+          </p>
+        </div>
+      </div>
+
+      <Link
+        to="/trending"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-stone-950"
+      >
+        <Flame size={16} className="me-2" />
+        {t.discovery.action}
+      </Link>
+    </div>
+  </div>
         {/* Mobile filters button */}
         <div className="mb-6 flex items-center justify-between lg:hidden">
           <p className="text-sm font-medium text-stone-500 dark:text-stone-400">

@@ -7,6 +7,7 @@ import {
   rejectRecipe,
   getPendingRecipes,
   createRecipe,
+  getTrendingRecipes,
 } from "./recipe.service.js";
 import { getRecipeCategoryById } from "../recipe-categories/recipeCategory.service.js";
 import type { CreateRecipeInput, UpdateRecipeInput } from "./recipe.types.js";
@@ -311,6 +312,35 @@ export const getRecipes = async (
     res.status(500).json({
       success: false,
       message: "Unable to fetch recipes.",
+    });
+  }
+};
+
+export const getTrendingRecipesController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const rawLimit = Number(req.query.limit ?? 12);
+
+    const limit = Number.isFinite(rawLimit)
+      ? Math.min(Math.max(Math.floor(rawLimit), 1), 24)
+      : 12;
+
+    const recipes = await getTrendingRecipes({
+      limit,
+    });
+
+    res.status(200).json({
+      success: true,
+      recipes,
+    });
+  } catch (error) {
+    console.error("Get trending recipes error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch trending recipes.",
     });
   }
 };

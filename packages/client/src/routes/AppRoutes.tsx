@@ -20,6 +20,7 @@ import {
   RecipeDetailsPage,
   RecipesPage,
   RegisterPage,
+  TrendingPage,
   UserDashboardPage,
 } from "../pages";
 
@@ -129,7 +130,7 @@ function AppRoutes() {
           }
         />
 
-        <Route path="/trending" element={<DevelopmentPage />} />
+        <Route path="/trending" element={<TrendingPage />} />
 
         <Route path="/categories" element={<DevelopmentPage />} />
 

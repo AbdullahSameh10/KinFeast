@@ -3,6 +3,7 @@ import {
   createRecipeController,
   getRecipeBySlug,
   getRecipes,
+  getTrendingRecipesController,
   updateRecipeController,
 } from "./recipe.controller.js";
 import { authenticateToken, requireRole } from "../auth/auth.middleware.js";
@@ -11,6 +12,8 @@ import { requireRecipeOwner } from "../auth/ownership.middleware.js";
 const router = Router();
 
 router.get("/", getRecipes);
+
+router.get("/trending", getTrendingRecipesController);
 
 router.get("/:slug", getRecipeBySlug);
 

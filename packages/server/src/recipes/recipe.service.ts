@@ -5,6 +5,7 @@ import {
 import type {
   CreateRecipeInput,
   PublishedRecipesQuery,
+  TrendingRecipesQuery,
   UpdateRecipeInput,
 } from "./recipe.types.js";
 
@@ -295,6 +296,126 @@ export const getPublishedRecipes = async ({
       totalPages: Math.ceil(total / limit),
     },
   };
+};
+
+export const getTrendingRecipes = async ({
+  limit,
+}: TrendingRecipesQuery) => {
+  const safeLimit = Math.min(Math.max(limit, 1), 24);
+
+  const result = await pool.query(
+    `
+      WITH view_stats AS (
+        SELECT
+          recipe_id,
+          COUNT(*)::integer AS view_count
+        FROM recipe_views
+        WHERE viewed_at >= NOW() - INTERVAL '30 days'
+        GROUP BY recipe_id
+      ),
+
+      like_stats AS (
+        SELECT
+          recipe_id,
+          COUNT(*)::integer AS like_count
+        FROM recipe_likes
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY recipe_id
+      ),
+
+      favorite_stats AS (
+        SELECT
+          recipe_id,
+          COUNT(*)::integer AS favorite_count
+        FROM favorites
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY recipe_id
+      ),
+
+      review_stats AS (
+        SELECT
+          recipe_id,
+          COUNT(*)::integer AS review_count,
+          ROUND(AVG(rating)::numeric, 1) AS average_rating
+        FROM recipe_reviews
+        WHERE created_at >= NOW() - INTERVAL '30 days'
+        GROUP BY recipe_id
+      )
+
+      SELECT
+        r.id,
+        r.author_id,
+        u.name AS author_name,
+        r.slug,
+        r.cuisine_id,
+        r.category_id,
+        c.name AS cuisine_name,
+        rc.name AS category_name,
+        r.title,
+        r.description,
+        r.instructions,
+        r.cooking_time,
+        r.difficulty,
+        r.recipe_image,
+        r.created_at,
+        r.status,
+
+        COALESCE(v.view_count, 0) AS view_count,
+        COALESCE(l.like_count, 0) AS like_count,
+        COALESCE(f.favorite_count, 0) AS favorite_count,
+        COALESCE(rv.review_count, 0) AS review_count,
+        COALESCE(rv.average_rating, 0) AS average_rating,
+
+        (
+          COALESCE(v.view_count, 0) * 1
+          + COALESCE(l.like_count, 0) * 3
+          + COALESCE(f.favorite_count, 0) * 2
+          + COALESCE(rv.review_count, 0) * 4
+          + COALESCE(rv.average_rating, 0) * 5
+          + GREATEST(
+              0,
+              30 - EXTRACT(
+                DAY FROM (NOW() - r.created_at)
+              )
+            ) * 0.5
+        ) AS trending_score
+
+      FROM recipes r
+
+      JOIN users u
+        ON r.author_id = u.id
+
+      LEFT JOIN cuisines c
+        ON r.cuisine_id = c.id
+
+      JOIN recipe_categories rc
+        ON r.category_id = rc.id
+
+      LEFT JOIN view_stats v
+        ON v.recipe_id = r.id
+
+      LEFT JOIN like_stats l
+        ON l.recipe_id = r.id
+
+      LEFT JOIN favorite_stats f
+        ON f.recipe_id = r.id
+
+      LEFT JOIN review_stats rv
+        ON rv.recipe_id = r.id
+
+      WHERE r.status = 'published'
+
+      ORDER BY
+        trending_score DESC,
+        r.created_at DESC,
+        r.id DESC
+
+      LIMIT $1
+    `,
+    [safeLimit],
+  );
+
+  return result.rows;
 };
 
 export const getPublishedRecipeBySlug = async ( slug: string ) => {

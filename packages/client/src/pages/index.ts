@@ -16,6 +16,7 @@ export { default as HomePage } from "./Home/HomePage";
 
 export { default as RecipesPage } from "./Recipes/RecipesPage";
 export { default as RecipeDetailsPage } from "./Recipes/RecipeDetailsPage";
+export { default as TrendingPage } from "./Recipes/TrendingPage";
 
 export { default as AboutPage } from "./AboutPage";
 

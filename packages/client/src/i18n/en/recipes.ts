@@ -4,6 +4,13 @@ export const recipes = {
   description:
     "Explore delicious recipes from our growing community of cooks and chefs. Search, filter, and find something worth making today.",
 
+  discovery: {
+    badge: "What's popular right now",
+    description:
+      "Want to see what the KinFeast community is loving? Explore the recipes trending right now.",
+    action: "Explore trending",
+  },
+
   search: {
     label: "Search recipes",
     placeholder: "Search by recipe, ingredient, chef, cuisine...",

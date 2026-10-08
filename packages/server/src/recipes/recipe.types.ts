@@ -30,3 +30,7 @@ export interface PublishedRecipesQuery {
   cuisineId?: number;
   difficulty?: "Easy" | "Medium" | "Hard";
 }
+
+export interface TrendingRecipesQuery {
+  limit: number;
+}

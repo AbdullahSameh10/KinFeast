@@ -19,6 +19,15 @@ export interface Recipe {
   status: string;
 }
 
+export interface TrendingRecipe extends Recipe {
+  view_count: number;
+  like_count: number;
+  favorite_count: number;
+  review_count: number;
+  average_rating: number;
+  trending_score: number;
+}
+
 export interface RecipeCategory {
   id: number | string;
   name: string;
@@ -43,6 +52,12 @@ interface RecipesResponse {
   success: boolean;
   recipes: Recipe[];
   pagination: RecipesPagination;
+  message?: string;
+}
+
+interface TrendingRecipesResponse {
+  success: boolean;
+  recipes: TrendingRecipe[];
   message?: string;
 }
 
@@ -94,6 +109,27 @@ export async function getRecipes(
     recipes: response.data.recipes,
     pagination: response.data.pagination,
   };
+}
+
+export async function getTrendingRecipes(
+  limit = 12,
+): Promise<TrendingRecipe[]> {
+  const response = await apiClient.get<TrendingRecipesResponse>(
+    "/recipes/trending",
+    {
+      params: {
+        limit,
+      },
+    },
+  );
+
+  if (!response.data.success) {
+    throw new Error(
+      response.data.message ?? "Unable to fetch trending recipes.",
+    );
+  }
+
+  return response.data.recipes;
 }
 
 export async function getRecipeCategories(): Promise<RecipeCategory[]> {
