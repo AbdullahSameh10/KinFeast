@@ -14,6 +14,7 @@ import {
   ChefDashboardPage,
   ChefsPage,
   ContactPage,
+  DevelopmentPage,
   LoginPage,
   NotFoundPage,
   RecipeDetailsPage,
@@ -127,6 +128,54 @@ function AppRoutes() {
             </GuestRoute>
           }
         />
+
+        <Route path="/trending" element={<DevelopmentPage />} />
+
+        <Route path="/categories" element={<DevelopmentPage />} />
+
+        <Route path="/featured-chefs" element={<DevelopmentPage />} />
+
+        <Route path="/become-a-chef" element={<DevelopmentPage />} />
+
+        <Route path="/creator-program" element={<DevelopmentPage />} />
+
+        <Route path="/partner-with-us" element={<DevelopmentPage />} />
+
+        <Route path="/careers" element={<DevelopmentPage />} />
+
+        <Route path="/how-it-works" element={<DevelopmentPage />} />
+
+        <Route path="/press" element={<DevelopmentPage />} />
+
+        <Route path="/business/restaurants" element={<DevelopmentPage />} />
+
+        <Route path="/business/brands" element={<DevelopmentPage />} />
+
+        <Route path="/business/advertising" element={<DevelopmentPage />} />
+
+        <Route path="/business/api" element={<DevelopmentPage />} />
+
+        <Route path="/help" element={<DevelopmentPage />} />
+
+        <Route path="/privacy" element={<DevelopmentPage />} />
+
+        <Route path="/terms" element={<DevelopmentPage />} />
+
+        <Route path="/cookies" element={<DevelopmentPage />} />
+
+        <Route path="/accessibility" element={<DevelopmentPage />} />
+
+        <Route path="/community-guidelines" element={<DevelopmentPage />} />
+
+        <Route path="/social/instagram" element={<DevelopmentPage />} />
+
+        <Route path="/social/youtube" element={<DevelopmentPage />} />
+
+        <Route path="/social/tiktok" element={<DevelopmentPage />} />
+
+        <Route path="/social/pinterest" element={<DevelopmentPage />} />
+
+        <Route path="/social/x" element={<DevelopmentPage />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

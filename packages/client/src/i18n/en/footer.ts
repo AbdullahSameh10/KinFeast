@@ -1,93 +1,132 @@
 ﻿export const footer = {
-  // ...your existing keys
-    brand: {
-      description:
-        "A global table for home cooks — discover, share, and talk about recipes with people from every corner of the world.",
+  brand: {
+    tagline: "Where the world cooks together.",
+    description:
+      "A global table for home cooks, chefs, and food lovers — discover recipes, share your creations, and connect with people from every corner of the world.",
+  },
+
+  columns: {
+    discover: {
+      title: "Discover",
+      links: [
+        "Recipes",
+        "Trending",
+        "Categories",
+        "Featured Chefs",
+      ],
+      hrefs: [
+        "/recipes",
+        "/trending",
+        "/categories",
+        "/featured-chefs",
+      ],
     },
-    stats: {
-      homeCooks: { value: "2.4M+", label: "Home cooks worldwide" },
-      countries: { value: "190+", label: "Countries represented" },
-      recipes: { value: "180K+", label: "Recipes shared" },
-      chefs: { value: "12K+", label: "Verified chefs" },
+
+    joinKinFeast: {
+      title: "Join KinFeast",
+      links: [
+        "Become a KinFeast Chef",
+        "Creator Program",
+        "Partner With KinFeast",
+        "Careers",
+      ],
+      hrefs: [
+        "/become-a-chef",
+        "/creator-program",
+        "/partner-with-us",
+        "/careers",
+      ],
+      hiringBadge: "We're hiring",
     },
-    columns: {
-      discover: {
-        title: "Discover",
-        links: [
-          "Trending Recipes",
-          "Recipe Collections",
-          "Seasonal & Holiday",
-          "Cuisines A–Z",
-          "Meal Planning Tools",
-        ],
-        hrefs: [
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-        ]
-      },
-      community: {
-        title: "Community",
-        links: [
-          "Chef Spotlight",
-          "Cooking Challenges",
-          "Discussion Forums",
-          "Become a Contributor",
-          "Community Guidelines",
-        ],
-        hrefs: [
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-        ]
-      },
-      company: {
-        title: "Company",
-        links: [
-          "About KinFeast",
-          "Careers",
-          "Press & Media",
-          "Sustainability",
-          "Contact Us",
-        ],
-        hiringBadge: "We're hiring",
-        hrefs: [
-          "/about",
-          "#",
-          "#",
-          "#",
-          "/contact",
-        ]
-      },
+
+    company: {
+      title: "Company",
+      links: [
+        "About",
+        "How It Works",
+        "Press & Media",
+        "Contact",
+      ],
+      hrefs: [
+        "/about",
+        "/how-it-works",
+        "/press",
+        "/contact",
+      ],
     },
-    newsletter: {
-      title: "Join the table",
-      description:
-        "Recipes and stories from cooks around the world, in your inbox weekly.",
-      placeholder: "Your email",
-      subscribe: "Subscribe",
-      thanks: "Thanks for subscribing!",
-      disclaimer: "No spam, unsubscribe anytime.",
+
+    business: {
+      title: "For Business",
+      links: [
+        "Restaurants",
+        "Brands",
+        "Advertising",
+        "API & Licensing",
+      ],
+      hrefs: [
+        "/business/restaurants",
+        "/business/brands",
+        "/business/advertising",
+        "/business/api",
+      ],
     },
-    apps: {
-      appStore: "App Store",
-      googlePlay: "Google Play",
+
+    support: {
+      title: "Support & Legal",
+      links: [
+        "Help Center",
+        "Privacy Policy",
+        "Terms of Service",
+        "Cookie Policy",
+        "Accessibility",
+        "Community Guidelines",
+      ],
+      hrefs: [
+        "/help",
+        "/privacy",
+        "/terms",
+        "/cookies",
+        "/accessibility",
+        "/community-guidelines",
+      ],
     },
-    legal: {
-      privacy: "Privacy",
-      terms: "Terms",
-      cookies: "Cookies",
-      accessibility: "Accessibility",
-    },
-    contact: {
-      email: "hello@kinfeast.com",
-      phone: "+20 101 9562810",
-      address: "Alexandria, Egypt",
-    },
-    languageSelectorLabel: "Choose language",
+  },
+
+  newsletter: {
+    title: "Join the table",
+    description:
+      "Recipes, stories, and inspiration from cooks around the world, delivered to your inbox.",
+    placeholder: "Your email",
+    subscribe: "Subscribe",
+    thanks: "Thanks for subscribing!",
+    disclaimer: "No spam. Unsubscribe anytime.",
+  },
+
+  apps: {
+    appStore: "App Store",
+    googlePlay: "Google Play",
+    comingSoon: "Coming soon",
+  },
+
+  contact: {
+    email: "hello@kinfeast.com",
+    phone: "+20 101 9562810",
+    address: "Alexandria, Egypt",
+  },
+
+  social: {
+    instagram: "Instagram",
+    youtube: "YouTube",
+    tiktok: "TikTok",
+    pinterest: "Pinterest",
+    x: "X",
+  },
+
+  legal: {
     copyright: "All rights reserved.",
+  },
+
+  languageSelectorLabel: "Choose language",
+
+  madeWithCare: "Made with care in Alexandria, shared with the world.",
 };

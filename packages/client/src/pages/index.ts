@@ -17,9 +17,11 @@ export { default as HomePage } from "./Home/HomePage";
 export { default as RecipesPage } from "./Recipes/RecipesPage";
 export { default as RecipeDetailsPage } from "./Recipes/RecipeDetailsPage";
 
-export { default as AboutPage } from "./About/AboutPage";
+export { default as AboutPage } from "./AboutPage";
 
-export { default as ContactPage } from "./Contact/ContactPage";
+export { default as ContactPage } from "./ContactPage";
+
+export { default as DevelopmentPage } from "./DevelopmentPage";
 
 export { default as UserDashboardPage } from "./User/UserDashboardPage";
 

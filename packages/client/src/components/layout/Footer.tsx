@@ -1,46 +1,55 @@
-﻿import { Link } from "react-router-dom";
-import { ArrowRight, Download, Mail, MapPin, Phone } from "lucide-react";
-import logoDark from "../../assets/logo (dark).png";
-import logoLight from "../../assets/logo (light).png";
-import { useState } from "react";
-import { useLanguage } from "../../hooks/useLanguage";
-import { translations } from "../../i18n";
+﻿import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  FaFacebook,
+  ArrowRight,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
+
+import {
   FaInstagram,
   FaPinterestP,
   FaYoutube,
 } from "react-icons/fa";
-import { FaTiktok } from "react-icons/fa6";
+import { FaTiktok, FaXTwitter } from "react-icons/fa6";
 
-import appStore from "./../../assets/app-store.svg";
-import googlePlay from "./../../assets/google-play.svg";
+import logoDark from "../../assets/logo (dark).png";
+import logoLight from "../../assets/logo (light).png";
+
+import { useLanguage } from "../../hooks/useLanguage";
+import { translations } from "../../i18n";
 
 const SOCIAL_LINKS = [
   {
     icon: FaInstagram,
-    href: "#",
-    label: "Instagram",
+    href: "/social/instagram",
+    label: "instagram" as const,
     color: "hover:text-pink-500",
   },
   {
-    icon: FaPinterestP,
-    href: "#",
-    label: "Pinterest",
+    icon: FaYoutube,
+    href: "/social/youtube",
+    label: "youtube" as const,
     color: "hover:text-red-500",
   },
   {
     icon: FaTiktok,
-    href: "#",
-    label: "TikTok",
-    color: "hover:text-stone-900 dark:hover:text-white",
+    href: "/social/tiktok",
+    label: "tiktok" as const,
+    color: "hover:text-stone-950 dark:hover:text-white",
   },
-  { icon: FaYoutube, href: "#", label: "YouTube", color: "hover:text-red-500" },
   {
-    icon: FaFacebook,
-    href: "#",
-    label: "Facebook",
-    color: "hover:text-blue-600",
+    icon: FaPinterestP,
+    href: "/social/pinterest",
+    label: "pinterest" as const,
+    color: "hover:text-red-500",
+  },
+  {
+    icon: FaXTwitter,
+    href: "/social/x",
+    label: "x" as const,
+    color: "hover:text-stone-950 dark:hover:text-white",
   },
 ];
 
@@ -58,27 +67,35 @@ function Footer() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setIsSubmitted(true);
-      setTimeout(() => setIsSubmitted(false), 3000);
-      setEmail("");
+
+    if (!email) {
+      return;
     }
+
+    setIsSubmitted(true);
+    setEmail("");
+
+    setTimeout(() => {
+      setIsSubmitted(false);
+    }, 3000);
   };
 
   const columnEntries = [
     t.columns.discover,
-    t.columns.community,
+    t.columns.joinKinFeast,
     t.columns.company,
+    t.columns.business,
+    t.columns.support,
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-stone-50 to-white dark:from-stone-950 dark:to-stone-900">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-orange-400/50 to-transparent" />
+    <footer className="relative border-t border-stone-200/70 bg-gradient-to-b from-stone-50 to-white dark:border-stone-800/70 dark:from-stone-950 dark:to-stone-900">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent" />
 
-      <div className="page-container py-16">
-        <div className="grid gap-12 lg:grid-cols-12">
-          {/* Brand column */}
-          <div className="lg:col-span-3">
+      <div className="page-container py-14 sm:py-16 lg:py-20">
+        {/* Brand row */}
+        <div className="flex flex-col gap-8 border-b border-stone-200/70 pb-10 dark:border-stone-800/70 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
             <Link to="/" className="inline-block">
               <img
                 src={logoDark}
@@ -87,6 +104,7 @@ function Footer() {
                 height={42}
                 className="hidden dark:block"
               />
+
               <img
                 src={logoLight}
                 alt="KinFeast"
@@ -96,69 +114,149 @@ function Footer() {
               />
             </Link>
 
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-stone-600 dark:text-stone-400">
-              {t.brand.description}
+            <p className="mt-4 text-base font-medium text-stone-800 dark:text-stone-200">
+              {t.brand.tagline}
             </p>
 
-            <div className="mt-6 space-y-3">
-              <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
-                <Mail size={16} className="text-orange-400" />
-                <a
-                  href={`mailto:${t.contact.email}`}
-                  className="hover:text-orange-500"
+            <p className="mt-2 max-w-xl text-sm leading-7 text-stone-600 dark:text-stone-400">
+              {t.brand.description}
+            </p>
+          </div>
+
+          {/* Language selector */}
+          <div className="shrink-0">
+            <label className="sr-only" htmlFor="footer-language">
+              {t.languageSelectorLabel}
+            </label>
+
+            <select
+              id="footer-language"
+              aria-label={t.languageSelectorLabel}
+              value={language}
+              onChange={(e) =>
+                setLanguage(e.target.value as typeof language)
+              }
+              className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 outline-none transition-colors hover:border-orange-400 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+            >
+              {LANGUAGE_OPTIONS.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Main footer content */}
+        <div className="grid gap-12 py-12 lg:grid-cols-12">
+          {/* Contact / newsletter */}
+          <div className="lg:col-span-3">
+            <h2 className="text-sm font-semibold text-stone-900 dark:text-white">
+              {t.newsletter.title}
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-stone-600 dark:text-stone-400">
+              {t.newsletter.description}
+            </p>
+
+            <form onSubmit={handleSubmit} className="mt-5">
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t.newsletter.placeholder}
+                  aria-label={t.newsletter.placeholder}
+                  required
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-stone-200 bg-white px-3.5 text-sm text-stone-900 outline-none transition-all placeholder:text-stone-400 focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 dark:border-stone-700 dark:bg-stone-900 dark:text-white dark:placeholder:text-stone-500"
+                />
+
+                <button
+                  type="submit"
+                  aria-label={t.newsletter.subscribe}
+                  className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-500 text-white transition-all hover:bg-orange-600 active:scale-95"
                 >
-                  {t.contact.email}
-                </a>
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
+                  />
+                </button>
               </div>
-              <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
-                <Phone size={16} className="text-orange-400" />
-                <a
-                  href={`tel:${translations["en"].footer.contact.phone.replace(/\s+/g, "")}`}
-                  className="hover:text-orange-500"
-                >{t.contact.phone}</a>
-              </div>
-              <div className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-400">
-                <MapPin size={16} className="text-orange-400" />
+
+              {isSubmitted && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  {t.newsletter.thanks}
+                </p>
+              )}
+            </form>
+
+            <p className="mt-2 text-[11px] leading-5 text-stone-400 dark:text-stone-500">
+              {t.newsletter.disclaimer}
+            </p>
+
+            <div className="mt-7 space-y-3">
+              <a
+                href={`mailto:${t.contact.email}`}
+                className="flex items-center gap-3 text-sm text-stone-600 transition-colors hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
+              >
+                <Mail
+                  size={16}
+                  className="shrink-0 text-orange-500"
+                />
+                <span>{t.contact.email}</span>
+              </a>
+
+              <a
+                href={`tel:${translations.en.footer.contact.phone.replace(
+                  /\s+/g,
+                  "",
+                )}`}
+                className="flex items-center gap-3 text-sm text-stone-600 transition-colors hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
+              >
+                <Phone
+                  size={16}
+                  className="shrink-0 text-orange-500"
+                />
+                <span>{t.contact.phone}</span>
+              </a>
+
+              <div className="flex items-start gap-3 text-sm text-stone-600 dark:text-stone-400">
+                <MapPin
+                  size={16}
+                  className="mt-0.5 shrink-0 text-orange-500"
+                />
                 <span>{t.contact.address}</span>
               </div>
             </div>
-
-            <div className="mt-8 flex items-center gap-3">
-              {SOCIAL_LINKS.map(({ icon: Icon, href, label, color }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className={`flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-500 transition-colors dark:bg-stone-800 dark:text-stone-400 ${color}`}
-                >
-                  <Icon size={15} />
-                </a>
-              ))}
-            </div>
           </div>
 
-          {/* Link columns */}
-          <div className="lg:col-span-5">
-            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-              {columnEntries.map((col) => (
-                <div key={col.title}>
+          {/* Footer columns */}
+          <div className="lg:col-span-9">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 xl:grid-cols-5">
+              {columnEntries.map((column) => (
+                <div key={column.title}>
                   <h3 className="text-sm font-semibold text-stone-900 dark:text-white">
-                    {col.title}
+                    {column.title}
                   </h3>
+
                   <ul className="mt-4 space-y-3">
-                    {col.links.map((item) => (
+                    {column.links.map((item, index) => (
                       <li key={item}>
                         <Link
-                          to={col.hrefs[col.links.indexOf(item)]}
-                          className="group flex items-center text-sm text-stone-600 transition-colors hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
+                          to={column.hrefs[index]}
+                          className="group inline-flex items-center text-sm text-stone-600 transition-colors hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
                         >
                           <span className="relative">
                             {String(item)}
-                            {"hiringBadge" in col && item === col.links[1] && (
-                              <span className="ms-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                {String(col.hiringBadge)}
-                              </span>
-                            )}
+
+                            {"hiringBadge" in column &&
+                              index === 3 && (
+                                <span className="ms-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                  {String(column.hiringBadge)}
+                                </span>
+                              )}
+
                             <span className="absolute -bottom-0.5 start-0 h-px w-0 bg-orange-400 transition-all group-hover:w-full" />
                           </span>
                         </Link>
@@ -169,126 +267,38 @@ function Footer() {
               ))}
             </div>
           </div>
-
-          {/* Newsletter + app download */}
-          <div className="lg:col-span-4">
-            <div className="rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50/70 p-6 dark:from-orange-950/20 dark:to-amber-950/10">
-              <h3 className="text-sm font-semibold text-stone-900 dark:text-white">
-                {t.newsletter.title}
-              </h3>
-              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-                {t.newsletter.description}
-              </p>
-
-              <form onSubmit={handleSubmit} className="mt-4">
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t.newsletter.placeholder}
-                    aria-label={t.newsletter.placeholder}
-                    className="h-11 flex-1 rounded-xl border-0 bg-white/70 px-4 text-sm text-stone-900 outline-none transition-all placeholder:text-stone-400 focus:ring-2 focus:ring-orange-400 dark:bg-stone-800/50 dark:text-white dark:placeholder:text-stone-500"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="group relative h-11 min-w-[100px] overflow-hidden rounded-xl bg-orange-500 px-4 text-sm font-semibold text-white transition-all hover:bg-orange-600 active:scale-95"
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      {t.newsletter.subscribe}
-                      <ArrowRight
-                        size={15}
-                        className="transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
-                      />
-                    </span>
-                  </button>
-                </div>
-                {isSubmitted && (
-                  <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    {t.newsletter.thanks}
-                  </p>
-                )}
-              </form>
-              <p className="mt-3 text-[10px] text-stone-400 dark:text-stone-500">
-                {t.newsletter.disclaimer}
-              </p>
-            </div>
-
-            <div className="mt-4 flex gap-2">
-              <a
-                href="#"
-                className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-stone-200 px-3 py-2.5 text-xs font-medium text-stone-700 transition-colors hover:border-orange-400 hover:text-orange-500 dark:border-stone-700 dark:text-stone-300 rtl:flex-row-reverse"
-              >
-                <img src={appStore} alt="App Store" width={14} height={14} />
-                App Store
-                <Download size={14} />
-              </a>
-              <a
-                href="#"
-                className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-stone-200 px-3 py-2.5 text-xs font-medium text-stone-700 transition-colors hover:border-orange-400 hover:text-orange-500 dark:border-stone-700 dark:text-stone-300 rtl:flex-row-reverse"
-              >
-                <img
-                  src={googlePlay}
-                  alt="Google Play"
-                  width={14}
-                  height={14}
-                />
-                Google Play
-                <Download size={14} />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Bottom bar */}
       <div className="border-t border-stone-200/70 dark:border-stone-800/70">
-        <div className="page-container flex flex-col items-center justify-between gap-4 py-6 md:flex-row">
-          <div className="order-2 text-xs text-stone-400 dark:text-stone-500 md:order-1">
-            © {new Date().getFullYear()} KinFeast. {t.copyright}
+        <div className="page-container flex flex-col gap-6 py-6 lg:flex-row lg:items-center lg:justify-between">
+          {/* Copyright */}
+          <p className="text-xs text-stone-500 dark:text-stone-500">
+            © {new Date().getFullYear()} KinFeast. {t.legal.copyright}
+          </p>
+
+          {/* Social links */}
+          <div className="flex items-center gap-2">
+            {SOCIAL_LINKS.map(
+              ({ icon: Icon, href, label, color }) => (
+                <Link
+                  key={label}
+                  to={href}
+                  aria-label={String(t.social[label as keyof typeof t.social])}
+                  title={String(t.social[label as keyof typeof t.social])}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-500 transition-colors dark:bg-stone-800 dark:text-stone-400 ${color}`}
+                >
+                  <Icon size={15} />
+                </Link>
+              ),
+            )}
           </div>
 
-          <div className="order-1 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs md:order-2">
-            <Link
-              to="/privacy"
-              className="text-stone-500 hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
-            >
-              {t.legal.privacy}
-            </Link>
-            <Link
-              to="/terms"
-              className="text-stone-500 hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
-            >
-              {t.legal.terms}
-            </Link>
-            <Link
-              to="/cookies"
-              className="text-stone-500 hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
-            >
-              {t.legal.cookies}
-            </Link>
-            <Link
-              to="/accessibility"
-              className="text-stone-500 hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400"
-            >
-              {t.legal.accessibility}
-            </Link>
-          </div>
-
-          <select
-            aria-label={t.languageSelectorLabel}
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as typeof language)}
-            className="order-3 rounded-lg border border-stone-200 bg-transparent px-2 py-1.5 text-xs text-stone-500 outline-none dark:border-stone-700 dark:text-stone-400"
-          >
-            {LANGUAGE_OPTIONS.map((opt) => (
-              <option key={opt.code} value={opt.code}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          {/* Made with care */}
+          <p className="text-xs text-stone-500 dark:text-stone-500 lg:text-end">
+            {t.madeWithCare}
+          </p>
         </div>
       </div>
     </footer>

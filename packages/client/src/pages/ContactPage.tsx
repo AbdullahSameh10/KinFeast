@@ -9,11 +9,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 
-import { submitContactMessage } from "../../api/contact.api";
-import { Button } from "../../components/ui/Button";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle";
-import { useLanguage } from "../../hooks/useLanguage";
-import { translations } from "../../i18n";
+import { submitContactMessage } from "../api/contact.api";
+import { Button } from "../components/ui/Button";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import { useLanguage } from "../hooks/useLanguage";
+import { translations } from "../i18n";
 import axios from "axios";
 
 const INITIAL_FORM = {
@@ -41,8 +41,8 @@ function ContactPage() {
   const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, []);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const updateField = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -308,9 +308,7 @@ function ContactPage() {
                   aria-hidden="true"
                   className="pointer-events-none absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
                 >
-                  <label htmlFor="contact-website">
-                    Website
-                  </label>
+                  <label htmlFor="contact-website">Website</label>
 
                   <input
                     id="contact-website"

@@ -1,93 +1,132 @@
 ﻿export const footer = {
-  // ...your existing keys
-    brand: {
-      description:
-        "مائدة عالمية لعشّاق الطهي — اكتشف الوصفات وشاركها وتحدث عنها مع أشخاص من كل أنحاء العالم.",
+  brand: {
+    tagline: "حيث يطبخ العالم معًا.",
+    description:
+      "مائدة عالمية للطهاة المنزليين والطهاة وعشاق الطعام — اكتشف الوصفات وشارك إبداعاتك وتواصل مع أشخاص من كل أنحاء العالم.",
+  },
+
+  columns: {
+    discover: {
+      title: "استكشف",
+      links: [
+        "الوصفات",
+        "الرائج",
+        "التصنيفات",
+        "أبرز الطهاة",
+      ],
+      hrefs: [
+        "/recipes",
+        "/trending",
+        "/categories",
+        "/featured-chefs",
+      ],
     },
-    stats: {
-      homeCooks: { value: "+2.4M", label: "طاهٍ منزلي حول العالم" },
-      countries: { value: "+190", label: "دولة ممثَّلة" },
-      recipes: { value: "+180K", label: "وصفة مُشارَكة" },
-      chefs: { value: "+12K", label: "شيف موثّق" },
+
+    joinKinFeast: {
+      title: "انضم إلى KinFeast",
+      links: [
+        "كن شيفًا في KinFeast",
+        "برنامج صُنّاع المحتوى",
+        "شاركنا كشريك",
+        "الوظائف",
+      ],
+      hrefs: [
+        "/become-a-chef",
+        "/creator-program",
+        "/partner-with-us",
+        "/careers",
+      ],
+      hiringBadge: "نوظّف الآن",
     },
-    columns: {
-      discover: {
-        title: "استكشف",
-        links: [
-          "الوصفات الرائجة",
-          "مجموعات الوصفات",
-          "المواسم والأعياد",
-          "المطابخ من A إلى Z",
-          "أدوات تخطيط الوجبات",
-        ],
-        hrefs: [
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-        ]
-      },
-      community: {
-        title: "المجتمع",
-        links: [
-          "أضواء على الشيف",
-          "تحديات الطهي",
-          "منتديات النقاش",
-          "كن مساهمًا",
-          "إرشادات المجتمع",
-        ],
-        hrefs: [
-          "#",
-          "#",
-          "#",
-          "#",
-          "#",
-        ]
-      },
-      company: {
-        title: "الشركة",
-        links: [
-          "عن KinFeast",
-          "الوظائف",
-          "الصحافة والإعلام",
-          "الاستدامة",
-          "تواصل معنا",
-        ],
-        hiringBadge: "نوظّف الآن",
-        hrefs: [
-          "/about",
-          "#",
-          "#",
-          "#",
-          "/contact",
-        ]
-      },
+
+    company: {
+      title: "الشركة",
+      links: [
+        "عن KinFeast",
+        "كيف يعمل KinFeast",
+        "الصحافة والإعلام",
+        "تواصل معنا",
+      ],
+      hrefs: [
+        "/about",
+        "/how-it-works",
+        "/press",
+        "/contact",
+      ],
     },
-    newsletter: {
-      title: "انضم إلى المائدة",
-      description:
-        "وصفات وقصص من طهاة حول العالم، تصلك أسبوعيًا عبر بريدك الإلكتروني.",
-      placeholder: "بريدك الإلكتروني",
-      subscribe: "اشترك",
-      thanks: "شكرًا لاشتراكك!",
-      disclaimer: "بدون رسائل مزعجة، ويمكنك إلغاء الاشتراك في أي وقت.",
+
+    business: {
+      title: "للأعمال",
+      links: [
+        "المطاعم",
+        "العلامات التجارية",
+        "الإعلانات",
+        "واجهة API والترخيص",
+      ],
+      hrefs: [
+        "/business/restaurants",
+        "/business/brands",
+        "/business/advertising",
+        "/business/api",
+      ],
     },
-    apps: {
-      appStore: "متجر آب",
-      googlePlay: "جوجل بلاي",
+
+    support: {
+      title: "الدعم والقانون",
+      links: [
+        "مركز المساعدة",
+        "سياسة الخصوصية",
+        "شروط الخدمة",
+        "سياسة ملفات تعريف الارتباط",
+        "إمكانية الوصول",
+        "إرشادات المجتمع",
+      ],
+      hrefs: [
+        "/help",
+        "/privacy",
+        "/terms",
+        "/cookies",
+        "/accessibility",
+        "/community-guidelines",
+      ],
     },
-    legal: {
-      privacy: "الخصوصية",
-      terms: "الشروط",
-      cookies: "ملفات تعريف الارتباط",
-      accessibility: "إمكانية الوصول",
-    },
-    contact: {
-      email: "hello@kinfeast.com",
-      phone: "٩٥٦٢٨١٠ ١٠١ ٢٠+",
-      address: "الإسكندرية, مصر",
-    },
-    languageSelectorLabel: "اختر اللغة",
+  },
+
+  newsletter: {
+    title: "انضم إلى المائدة",
+    description:
+      "وصفات وقصص وإلهام من الطهاة حول العالم، تصلك مباشرة إلى بريدك الإلكتروني.",
+    placeholder: "بريدك الإلكتروني",
+    subscribe: "اشترك",
+    thanks: "شكرًا لاشتراكك!",
+    disclaimer: "بدون رسائل مزعجة، ويمكنك إلغاء الاشتراك في أي وقت.",
+  },
+
+  apps: {
+    appStore: "App Store",
+    googlePlay: "Google Play",
+    comingSoon: "قريبًا",
+  },
+
+  contact: {
+    email: "hello@kinfeast.com",
+    phone: "٩٥٦٢٨١٠ ١٠١ ٢٠+",
+    address: "الإسكندرية، مصر",
+  },
+
+  social: {
+    instagram: "إنستغرام",
+    youtube: "يوتيوب",
+    tiktok: "تيك توك",
+    pinterest: "بينتريست",
+    x: "X",
+  },
+
+  legal: {
     copyright: "جميع الحقوق محفوظة.",
+  },
+
+  languageSelectorLabel: "اختر اللغة",
+
+  madeWithCare: "صُنع بعناية في الإسكندرية، ليشارك العالم المائدة.",
 };
