@@ -30,6 +30,7 @@ import type {
   Difficulty,
   RecipeFiltersState,
 } from "./../../types/recipes.types.ts";
+import { getRecipeCategoryName } from "../../utils/recipeCategoryTranslations";
 
 const RECIPES_PER_PAGE = 12;
 
@@ -172,9 +173,9 @@ function RecipesPage() {
     () =>
       categories.map((category) => ({
         value: String(category.id),
-        label: category.name,
+        label: getRecipeCategoryName(category, language),
       })),
-    [categories],
+    [categories, language],
   );
 
   const cuisineOptions = useMemo(

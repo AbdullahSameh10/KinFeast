@@ -40,6 +40,12 @@ import { contact as arContact } from "./ar/contact";
 import { notFound as enNotFound } from "./en/notFound";
 import { notFound as arNotFound } from "./ar/notFound";
 
+import { categoriesPage as enCategoriesPage } from "./en/categoriesPage";
+import { categoriesPage as arCategoriesPage } from "./ar/categoriesPage";
+
+import { recipeCategories as enRecipeCategories } from "./en/recipeCategories";
+import { recipeCategories as arRecipeCategories } from "./ar/recipeCategories";
+
 export const translations = {
   en: {
     navbar: enNavbar,
@@ -48,6 +54,7 @@ export const translations = {
     chefs: enChefs,
     about: enAbout,
     contact: enContact,
+    categoriesPage: enCategoriesPage,
     hero: enHero,
     cookWithWhatYouHave: enCookWithWhatYouHave,
     categories: enCategories,
@@ -56,6 +63,7 @@ export const translations = {
     footer: enFooter,
     auth: enAuth,
     notFound: enNotFound,
+    recipeCategories: enRecipeCategories,    
   },
   ar: {
     navbar: arNavbar,
@@ -64,6 +72,7 @@ export const translations = {
     chefs: arChefs,
     about: arAbout,
     contact: arContact,
+    categoriesPage: arCategoriesPage,
     hero: arHero,
     cookWithWhatYouHave: arCookWithWhatYouHave,
     categories: arCategories,
@@ -72,5 +81,6 @@ export const translations = {
     footer: arFooter,
     auth: arAuth,
     notFound: arNotFound,
+    recipeCategories: arRecipeCategories,
   },
 } as const;

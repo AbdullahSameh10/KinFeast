@@ -11,6 +11,7 @@ import {
   AdminModerationPage,
   AdminRecipesPage,
   AdminUsersPage,
+  CategoriesPage,
   ChefDashboardPage,
   ChefsPage,
   ContactPage,
@@ -132,7 +133,7 @@ function AppRoutes() {
 
         <Route path="/trending" element={<TrendingPage />} />
 
-        <Route path="/categories" element={<DevelopmentPage />} />
+        <Route path="/categories" element={<CategoriesPage />} />
 
         <Route path="/featured-chefs" element={<DevelopmentPage />} />
 

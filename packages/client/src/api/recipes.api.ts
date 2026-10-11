@@ -33,6 +33,8 @@ export interface RecipeCategory {
   name: string;
   slug: string;
   created_at: string;
+  recipe_count?: number;
+  image_url?: string | null;
 }
 
 export interface Cuisine {

@@ -22,6 +22,8 @@ export { default as AboutPage } from "./AboutPage";
 
 export { default as ContactPage } from "./ContactPage";
 
+export { default as CategoriesPage } from "./CategoriesPage";
+
 export { default as DevelopmentPage } from "./DevelopmentPage";
 
 export { default as UserDashboardPage } from "./User/UserDashboardPage";

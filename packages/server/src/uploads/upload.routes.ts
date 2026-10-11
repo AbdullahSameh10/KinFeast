@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { authenticateToken, requireRole } from "../auth/auth.middleware.js";
-import { uploadRecipeImage } from "./upload.service.js";
+import { uploadCategoryImage, uploadRecipeImage } from "./upload.service.js";
 
 const router = Router();
 
@@ -11,16 +11,10 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024,
   },
   fileFilter: (_req, file, callback) => {
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-    ];
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
     if (!allowedTypes.includes(file.mimetype)) {
-      callback(
-        new Error("Only JPEG, PNG, and WebP images are allowed."),
-      );
+      callback(new Error("Only JPEG, PNG, and WebP images are allowed."));
       return;
     }
 
@@ -64,6 +58,43 @@ router.post(
       res.status(500).json({
         success: false,
         message: "Unable to upload recipe image.",
+      });
+    }
+  },
+);
+
+router.post(
+  "/category-image",
+  authenticateToken,
+  requireRole("admin"),
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.status(400).json({
+          success: false,
+          message: "Category image is required.",
+        });
+        return;
+      }
+
+      const result = await uploadCategoryImage(req.file.buffer);
+
+      res.status(201).json({
+        success: true,
+        image: {
+          url: result.secure_url,
+          publicId: result.public_id,
+          width: result.width,
+          height: result.height,
+        },
+      });
+    } catch (error) {
+      console.error("Category image upload error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to upload category image.",
       });
     }
   },

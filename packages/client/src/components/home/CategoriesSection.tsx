@@ -1,134 +1,126 @@
 import {
   ArrowRight,
-  ChevronRight,
-  Clock,
-  Heart,
+  ArrowUpRight,
+  ChefHat,
   Flame,
-  Globe,
-  Coffee,
-  Cake,
-  Salad,
-  Pizza,
-  Utensils,
+  RefreshCw,
+  Search,
   Sparkles,
-  TrendingUp,
+  Utensils,
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import {
+  getRecipeCategories,
+  type RecipeCategory,
+} from "../../api/recipes.api";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import {
+  DEFAULT_RECIPE_FILTERS,
+  persistRecipeFilters,
+} from "../../utils/recipesFiltersStorage";
+import { getRecipeCategoryName } from "../../utils/recipeCategoryTranslations";
 
-const categoryConfig = [
-  {
-    key: "quickAndEasy",
-    icon: Clock,
-    image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=900&h=700&fit=crop",
-    className: "lg:col-span-2",
-    gradient: "from-blue-600/90 to-cyan-600/90",
-  },
-  {
-    key: "healthy",
-    icon: Salad,
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=700&h=500&fit=crop",
-    className: "",
-    gradient: "from-emerald-600/90 to-green-600/90",
-  },
-  {
-    key: "comfortFood",
-    icon: Heart,
-    image:
-      "https://images.unsplash.com/photo-1547592180-85f173990554?w=700&h=500&fit=crop",
-    className: "",
-    gradient: "from-rose-600/90 to-pink-600/90",
-  },
-  {
-    key: "asian",
-    icon: Utensils,
-    image:
-      "https://www.marionskitchen.com/wp-content/uploads/2022/04/Garlic-Prawn-Pad-See-Ew-02.jpg",
-    className: "",
-    gradient: "from-red-600/90 to-orange-600/90",
-  },
-  {
-    key: "mediterranean",
-    icon: Globe,
-    image:
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=700&h=500&fit=crop",
-    className: "lg:col-span-2",
-    gradient: "from-amber-600/90 to-orange-600/90",
-  },
-  {
-    key: "desserts",
-    icon: Cake,
-    image:
-      "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=700&h=500&fit=crop",
-    className: "",
-    gradient: "from-purple-600/90 to-pink-600/90",
-  },
-] as const;
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1547592180-85f173990554?w=900&h=700&fit=crop";
 
-const trendingCategoryConfig = [
-  {
-    key: "quickAndEasy",
-    nameKey: "quickAndEasy",
-  },
-  {
-    key: "asian",
-    nameKey: "asian",
-  },
-  {
-    key: "desserts",
-    nameKey: "desserts",
-  },
-] as const;
+
 
 function CategoriesSection() {
   const { language } = useLanguage();
   const t = translations[language].categories;
+  const navigate = useNavigate();
+
+  const [categories, setCategories] = useState<RecipeCategory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const loadCategories = useCallback(async () => {
+    setIsLoading(true);
+    setHasError(false);
+
+    try {
+      const result = await getRecipeCategories();
+
+      setCategories(
+        result.filter(
+          (category) =>
+            typeof category.recipe_count === "number" &&
+            category.recipe_count > 0,
+        ),
+      );
+    } catch (error) {
+      console.error("Unable to load Home page categories:", error);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeoutID = window.setTimeout(() => {
+      void loadCategories();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutID);
+  }, [loadCategories]);
+
+  const openCategory = (category: RecipeCategory) => {
+    persistRecipeFilters({
+      ...DEFAULT_RECIPE_FILTERS,
+      categoryId: String(category.id),
+      currentPage: 1,
+    });
+
+    navigate("/recipes");
+  };
+
+  const openCategoriesPage = () => {
+    navigate("/categories");
+  };
+
+  const formatCount = (count: number) => {
+    const formatted = new Intl.NumberFormat(
+      language === "ar" ? "ar" : "en",
+    ).format(count);
+
+    const label =
+      count === 1
+        ? language === "ar"
+          ? "وصفة"
+          : "recipe"
+        : language === "ar"
+          ? "وصفات"
+          : "recipes";
+
+    return `${formatted} ${label}`;
+  };
 
   return (
-    <section className="relative overflow-hidden bg-transparent py-24 sm:py-32">
-      {/* Background Decorations */}
-      <div className="pointer-events-none absolute inset-0">
+    <section className="relative overflow-hidden bg-transparent py-20 sm:py-28">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
         <div className="absolute left-1/4 top-0 h-64 w-64 rounded-full bg-orange-300/10 blur-3xl dark:bg-orange-500/5" />
         <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl dark:bg-amber-500/5" />
-
-        {/* Floating Decorations */}
-        <div className="animate-float-slow absolute left-[5%] top-[20%] opacity-10">
-          <Pizza size={48} className="text-orange-400" />
-        </div>
-
-        <div className="animate-float-delayed absolute right-[5%] top-[30%] opacity-10">
-          <Coffee size={40} className="text-amber-400" />
-        </div>
-
-        <div className="animate-float-slow absolute bottom-[25%] left-[8%] opacity-5">
-          <Flame size={56} className="text-orange-400" />
-        </div>
       </div>
 
       <div className="page-container relative">
-        {/* Section Header */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-3 rounded-full bg-orange-500/10 px-4 py-2 backdrop-blur-sm dark:bg-orange-400/10">
-              <Sparkles size={14} className="text-orange-500" />
-
-              <span className="text-xs font-semibold uppercase tracking-wider text-orange-600 dark:text-orange-400">
-                {t.badge.title}
-              </span>
-
+            <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-orange-600 dark:bg-orange-400/10 dark:text-orange-400">
+              <Sparkles size={15} aria-hidden="true" />
+              {t.badge.title}
               <span className="h-1 w-1 rounded-full bg-orange-400" />
-
-              <span className="text-xs font-medium text-orange-500/70">
-                {t.badge.subtitle}
-              </span>
+              {t.badge.subtitle}
             </div>
 
-            <h2 className="mt-5 min-h-fit text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl dark:text-white">
+            <h2 className="mt-5 text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl dark:text-white">
               {t.title.firstLine}
-
-              <span className="block min-h-14 bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+              <span className="mt-1 block bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
                 {t.title.highlight}
               </span>
             </h2>
@@ -140,182 +132,159 @@ function CategoriesSection() {
 
           <button
             type="button"
-            className="group inline-flex h-12 w-fit items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 active:scale-95"
+            onClick={openCategoriesPage}
+            className="inline-flex h-12 w-fit items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-stone-950"
           >
-            <span>{t.actions.exploreAll}</span>
-
+            {t.actions.exploreAll}
             <ArrowRight
               size={16}
-              className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
+              className="rtl:rotate-180"
               aria-hidden="true"
             />
           </button>
         </div>
 
-        {/* Trending Tags */}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-stone-400 dark:text-stone-500">
-            <TrendingUp size={14} className="text-orange-400" />
-            {t.trending.label}
-          </span>
+        {isLoading && (
+          <div
+            className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            aria-label={t.badge.title}
+          >
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-64 animate-pulse rounded-3xl bg-stone-200 dark:bg-stone-800"
+              />
+            ))}
+          </div>
+        )}
 
-          {trendingCategoryConfig.map(({ key, nameKey }) => {
-            const trendingCategory = t.trending.categories[nameKey];
+        {!isLoading && hasError && (
+          <div className="mt-10 rounded-3xl border border-stone-200 bg-white p-8 text-center dark:border-stone-800 dark:bg-stone-900">
+            <p className="text-stone-600 dark:text-stone-300">
+              {t.description}
+            </p>
 
-            return (
-              <span
-                key={key}
-                className="inline-flex items-center gap-2 rounded-full bg-stone-100/80 px-3 py-1.5 text-xs font-medium text-stone-600 backdrop-blur-sm dark:bg-stone-800/50 dark:text-stone-300"
-              >
-                {trendingCategory.name}
+            <button
+              type="button"
+              onClick={() => void loadCategories()}
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+            >
+              <RefreshCw size={16} aria-hidden="true" />
+              {language === "ar" ? "حاول مرة أخرى" : "Try again"}
+            </button>
+          </div>
+        )}
 
-                <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold text-orange-500 dark:bg-orange-400/10 dark:text-orange-400">
-                  {trendingCategory.badge}
-                </span>
-              </span>
-            );
-          })}
-        </div>
-
-        {/* Category Grid */}
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:auto-rows-[210px] lg:grid-cols-4">
-          {categoryConfig.map((category) => {
-            const categoryText = t.items[category.key];
-            const Icon = category.icon;
-
-            return (
+        {!isLoading && !hasError && categories.length > 0 && (
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.slice(0, 6).map((category) => (
               <button
-                key={category.key}
+                key={category.id}
                 type="button"
-                className={`group relative min-h-[240px] overflow-hidden rounded-3xl text-left shadow-lg shadow-stone-200/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-200/30 lg:min-h-0 dark:shadow-stone-900/50 dark:hover:shadow-orange-900/20 ${category.className}`}
+                onClick={() => openCategory(category)}
+                className="group relative min-h-64 overflow-hidden rounded-3xl text-start shadow-lg transition duration-500 hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-stone-950"
               >
-                {/* Image */}
                 <img
-                  src={category.image}
-                  alt={t.imageAlt[category.key]}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  src={category.image_url || FALLBACK_IMAGE}
+                  alt={getRecipeCategoryName(category, language)}
+                  loading="lazy"
+                  onError={(event) => {
+                    event.currentTarget.onerror = null;
+                    event.currentTarget.src = FALLBACK_IMAGE;
+                  }}
+                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
                 />
 
-                {/* Animated Gradient Overlay */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t ${category.gradient} opacity-80 transition-opacity duration-500 group-hover:opacity-70`}
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent transition group-hover:from-black/95" />
 
-                {/* Secondary Gradient for Depth */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-5">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                    <ChefHat size={14} aria-hidden="true" />
+                    {formatCount(category.recipe_count ?? 0)}
+                  </span>
 
-                {/* Category Icon Badge */}
-                <div className="absolute right-4 top-4 rounded-2xl bg-white/20 p-2.5 backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-white/30">
-                  <Icon size={20} className="text-white" />
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-white backdrop-blur transition group-hover:bg-white group-hover:text-orange-600">
+                    <ArrowUpRight
+                      size={20}
+                      className="rtl:-scale-x-100"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </div>
 
-                {/* Recipe Count Badge */}
-                <div className="absolute left-4 top-4 rounded-full bg-black/30 px-3 py-1 text-[10px] font-medium text-white/80 backdrop-blur-sm transition-all duration-300 group-hover:bg-black/40">
-                  {categoryText.count}
-                </div>
-
-                {/* Content */}
                 <div className="absolute inset-x-0 bottom-0 p-6">
-                  <div className="flex items-end justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-2xl font-bold text-white">
-                          {categoryText.name}
-                        </h3>
+                  <h3 className="text-2xl font-bold text-white">
+                    {getRecipeCategoryName(category, language)}
+                  </h3>
 
-                        {/* Hover Indicator */}
-                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      </div>
+                  <p className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-white/80 transition group-hover:text-white">
+                    {t.actions.exploreAll}
+                    <ArrowRight
+                      size={15}
+                      className="rtl:rotate-180"
+                      aria-hidden="true"
+                    />
+                  </p>
 
-                      <p className="mt-1.5 max-w-xs text-sm leading-relaxed text-white/80 transition-opacity duration-300 group-hover:text-white/90">
-                        {categoryText.description}
-                      </p>
-                    </div>
-
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-white backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-orange-500">
-                      <ChevronRight
-                        size={20}
-                        className="transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110 rtl:rotate-180 rtl:group-hover:-translate-x-1"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </div>
-
-                  {/* Animated Bottom Bar */}
-                  <div className="mt-4 h-0.5 w-0 rounded-full bg-white/40 transition-all duration-700 group-hover:w-full" />
-                </div>
-
-                {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-orange-400/20 to-amber-400/20 blur-xl" />
+                  <div className="mt-4 h-0.5 w-0 rounded-full bg-orange-400 transition-all duration-500 group-hover:w-full" />
                 </div>
               </button>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {/* Bottom CTA */}
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-stone-100/60 p-6 backdrop-blur-sm sm:p-8 dark:bg-stone-900/40">
+        {!isLoading && !hasError && categories.length === 0 && (
+          <div className="mt-10 rounded-3xl border border-stone-200 bg-white p-8 text-center dark:border-stone-800 dark:bg-stone-900">
+            <Utensils
+              size={28}
+              className="mx-auto text-orange-500"
+              aria-hidden="true"
+            />
+            <p className="mt-3 text-stone-600 dark:text-stone-300">
+              {language === "ar"
+                ? "ستظهر التصنيفات هنا عند توفر وصفات منشورة."
+                : "Categories will appear here when published recipes are available."}
+            </p>
+            <button
+              type="button"
+              onClick={openCategoriesPage}
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400"
+            >
+              <Search size={16} aria-hidden="true" />
+              {t.actions.exploreAll}
+            </button>
+          </div>
+        )}
+
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-stone-100/70 p-6 dark:bg-stone-900/50 sm:p-8">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20">
-              <Utensils size={20} className="text-orange-500" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500">
+              <Flame size={21} aria-hidden="true" />
             </div>
-
             <div>
-              <p className="text-sm font-semibold text-stone-900 dark:text-white">
-                {t.bottomCta.title}
+              <p className="font-semibold text-stone-900 dark:text-white">
+                {language === "ar"
+                  ? "اكتشف المزيد من الوصفات"
+                  : "There's always something delicious to discover"}
               </p>
-
-              <p className="text-sm text-stone-500 dark:text-stone-400">
-                {t.bottomCta.description}
+              <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+                {language === "ar"
+                  ? "استكشف جميع التصنيفات المتاحة."
+                  : "Explore every available recipe category."}
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            className="group inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-6 py-2.5 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600 hover:shadow-lg dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-orange-700 dark:hover:bg-orange-950/30 dark:hover:text-orange-400"
+            onClick={openCategoriesPage}
+            className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-700 transition hover:border-orange-300 hover:text-orange-600 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-orange-700 dark:hover:text-orange-400"
           >
-            <span>{t.actions.tryIngredientSearch}</span>
-
-            <ChevronRight
-              size={16}
-              className="transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
-              aria-hidden="true"
-            />
+            {t.actions.exploreAll}
+            <ArrowRight size={16} className="rtl:rotate-180" />
           </button>
         </div>
       </div>
-
-      <style>{`
-        @keyframes float-slow {
-          0%, 100% {
-            transform: translate(0, 0) rotate(0deg);
-          }
-
-          50% {
-            transform: translate(15px, -15px) rotate(5deg);
-          }
-        }
-
-        @keyframes float-delayed {
-          0%, 100% {
-            transform: translate(0, 0) rotate(0deg);
-          }
-
-          50% {
-            transform: translate(-15px, 15px) rotate(-5deg);
-          }
-        }
-
-        .animate-float-slow {
-          animation: float-slow 8s ease-in-out infinite;
-        }
-
-        .animate-float-delayed {
-          animation: float-delayed 10s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 }

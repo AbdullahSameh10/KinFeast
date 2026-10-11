@@ -12,6 +12,7 @@ import {
   removeFavorite,
 } from "../../api/favorites.api";
 import { useAuth } from "../../hooks/useAuth";
+import { getRecipeCategoryName } from "../../utils/recipeCategoryTranslations";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -121,7 +122,13 @@ function RecipeCard({ recipe }: RecipeCardProps) {
         {/* Category */}
         {recipe.category_name && (
           <span className="absolute bottom-3 start-3 inline-block max-w-[65%] truncate rounded-full bg-stone-950/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
-            {recipe.category_name}
+            {getRecipeCategoryName(
+              {
+                name: recipe.category_name,
+                slug: "",
+              },
+              language,
+            )}
           </span>
         )}
 
