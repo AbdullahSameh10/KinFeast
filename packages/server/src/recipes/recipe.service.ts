@@ -8,6 +8,9 @@ import type {
   TrendingRecipesQuery,
   UpdateRecipeInput,
 } from "./recipe.types.js";
+import { normalizeRecipeSearchText } from "./../recipe-keyword/recipeKeyword.utils.js";
+import { replaceRecipeKeywords } from "../recipe-keyword/recipeKeyword.service.js";
+
 
 export const createRecipe = async (
   authorId: string,
@@ -37,147 +40,197 @@ export const createRecipe = async (
     suffix += 1;
   }
 
-  const result = await pool.query(
-    `
-      INSERT INTO recipes (
-        author_id,
-        cuisine_id,
-        category_id,
-        title,
-        slug,
-        description,
-        instructions,
-        cooking_time,
-        difficulty,
-        recipe_image
-      )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      RETURNING
-        id,
-        author_id,
-        cuisine_id,
-        category_id,
-        title,
-        slug,
-        description,
-        instructions,
-        cooking_time,
-        difficulty,
-        recipe_image,
-        created_at,
-        status
-    `,
-    [
-      authorId,
-      input.cuisine_id ?? null,
-      input.category_id,
-      input.title.trim(),
-      slug,
-      input.description?.trim() ?? null,
-      input.instructions.trim(),
-      input.cooking_time,
-      input.difficulty ?? "Easy",
-      input.recipe_image?.trim() || null,
-    ],
-  );
+  const client = await pool.connect();
 
-  return result.rows[0];
+  try {
+    await client.query("BEGIN");
+
+    const result = await client.query(
+      `
+        INSERT INTO recipes (
+          author_id,
+          cuisine_id,
+          category_id,
+          title,
+          slug,
+          description,
+          instructions,
+          cooking_time,
+          difficulty,
+          recipe_image
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING
+          id,
+          author_id,
+          cuisine_id,
+          category_id,
+          title,
+          slug,
+          description,
+          instructions,
+          cooking_time,
+          difficulty,
+          recipe_image,
+          created_at,
+          status
+      `,
+      [
+        authorId,
+        input.cuisine_id ?? null,
+        input.category_id,
+        input.title.trim(),
+        slug,
+        input.description?.trim() ?? null,
+        input.instructions.trim(),
+        input.cooking_time,
+        input.difficulty ?? "Easy",
+        input.recipe_image?.trim() || null,
+      ],
+    );
+
+    const recipe = result.rows[0];
+
+    await replaceRecipeKeywords(
+      client,
+      recipe.id,
+      input.keywords ?? [],
+    );
+
+    await client.query("COMMIT");
+
+    return {
+      ...recipe,
+      keywords: input.keywords ?? [],
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 };
+
 
 export const updateRecipe = async (
   recipeId: string,
   input: UpdateRecipeInput,
 ) => {
-  const result = await pool.query(
-    `
-      UPDATE recipes
-      SET
-        title = CASE
-          WHEN $1::text IS NULL THEN title
-          ELSE $1
-        END,
+  const client = await pool.connect();
 
-        description = CASE
-          WHEN $2::boolean = false THEN description
-          ELSE $3
-        END,
+  try {
+    await client.query("BEGIN");
 
-        instructions = CASE
-          WHEN $4::text IS NULL THEN instructions
-          ELSE $4
-        END,
+    const result = await client.query(
+      `
+        UPDATE recipes
+        SET
+          title = CASE
+            WHEN $1::text IS NULL THEN title
+            ELSE $1
+          END,
 
-        cooking_time = CASE
-          WHEN $5::integer IS NULL THEN cooking_time
-          ELSE $5
-        END,
+          description = CASE
+            WHEN $2::boolean = false THEN description
+            ELSE $3
+          END,
 
-        difficulty = CASE
-          WHEN $6::text IS NULL THEN difficulty
-          ELSE $6
-        END,
+          instructions = CASE
+            WHEN $4::text IS NULL THEN instructions
+            ELSE $4
+          END,
 
-        cuisine_id = CASE
-          WHEN $7::boolean = false THEN cuisine_id
-          ELSE $8
-        END,
+          cooking_time = CASE
+            WHEN $5::integer IS NULL THEN cooking_time
+            ELSE $5
+          END,
 
-        category_id = CASE
-          WHEN $9::boolean = false THEN category_id
-          ELSE $10
-        END,
+          difficulty = CASE
+            WHEN $6::text IS NULL THEN difficulty
+            ELSE $6
+          END,
 
-        recipe_image = CASE
-          WHEN $11::boolean = false THEN recipe_image
-          ELSE $12
-        END
+          cuisine_id = CASE
+            WHEN $7::boolean = false THEN cuisine_id
+            ELSE $8
+          END,
 
-      WHERE id = $13
+          category_id = CASE
+            WHEN $9::boolean = false THEN category_id
+            ELSE $10
+          END,
 
-      RETURNING
-        id,
-        author_id,
-        cuisine_id,
-        category_id,
-        title,
-        description,
-        instructions,
-        cooking_time,
-        difficulty,
-        recipe_image,
-        created_at,
-        status
-    `,
-    [
-      input.title ?? null,
+          recipe_image = CASE
+            WHEN $11::boolean = false THEN recipe_image
+            ELSE $12
+          END
 
-      input.description !== undefined,
-      input.description ?? null,
+        WHERE id = $13
 
-      input.instructions ?? null,
+        RETURNING
+          id,
+          author_id,
+          cuisine_id,
+          category_id,
+          title,
+          description,
+          instructions,
+          cooking_time,
+          difficulty,
+          recipe_image,
+          created_at,
+          status
+      `,
+      [
+        input.title ?? null,
 
-      input.cooking_time ?? null,
+        input.description !== undefined,
+        input.description ?? null,
 
-      input.difficulty ?? null,
+        input.instructions ?? null,
 
-      input.cuisine_id !== undefined,
-      input.cuisine_id ?? null,
+        input.cooking_time ?? null,
 
-      input.category_id !== undefined,
-      input.category_id ?? null,
+        input.difficulty ?? null,
 
-      input.recipe_image !== undefined,
-      input.recipe_image?.trim() || null,
+        input.cuisine_id !== undefined,
+        input.cuisine_id ?? null,
 
-      recipeId,
-    ],
-  );
+        input.category_id !== undefined,
+        input.category_id ?? null,
 
-  if (result.rows.length === 0) {
-    throw new Error("RECIPE_NOT_FOUND");
+        input.recipe_image !== undefined,
+        input.recipe_image?.trim() || null,
+
+        recipeId,
+      ],
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error("RECIPE_NOT_FOUND");
+    }
+
+    const recipe = result.rows[0];
+
+    // Only replace keywords if the request includes the keywords property.
+    // An empty array intentionally removes all existing keywords.
+    if (input.keywords !== undefined) {
+      await replaceRecipeKeywords(
+        client,
+        recipeId,
+        input.keywords,
+      );
+    }
+
+    await client.query("COMMIT");
+
+    return recipe;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
-
-  return result.rows[0];
 };
 
 export const getPublishedRecipes = async ({
@@ -198,8 +251,12 @@ export const getPublishedRecipes = async ({
     return `$${values.length}`;
   };
 
+  
   if (search) {
     const searchParam = addValue(`%${search}%`);
+
+    const normalizedSearch = normalizeRecipeSearchText(search);
+    const normalizedSearchParam = addValue(`%${normalizedSearch}%`);
 
     conditions.push(`
       (
@@ -208,9 +265,16 @@ export const getPublishedRecipes = async ({
         OR u.name ILIKE ${searchParam}
         OR c.name ILIKE ${searchParam}
         OR rc.name ILIKE ${searchParam}
+        OR EXISTS (
+          SELECT 1
+          FROM recipe_keywords rk
+          WHERE rk.recipe_id = r.id
+            AND rk.normalized_keyword LIKE ${normalizedSearchParam}
+        )
       )
     `);
   }
+
 
   if (categoryId !== undefined) {
     const categoryParam = addValue(categoryId);

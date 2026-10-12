@@ -99,13 +99,13 @@ function CategoriesSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-transparent py-20 sm:py-28">
+    <section className="relative py-20 sm:py-28">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 "
       >
-        <div className="absolute left-1/4 top-0 h-64 w-64 rounded-full bg-orange-300/10 blur-3xl dark:bg-orange-500/5" />
-        <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-amber-300/10 blur-3xl dark:bg-amber-500/5" />
+        <div className="animate-float-slow absolute -left-32 top-0 h-96 w-96 rounded-full bg-orange-300/20 blur-3xl dark:bg-orange-500/10" />
+        <div className="animate-float-delayed absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-500/10" />      
       </div>
 
       <div className="page-container relative">

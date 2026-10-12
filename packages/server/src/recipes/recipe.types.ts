@@ -1,3 +1,5 @@
+import type { RecipeKeywordInput } from "./../recipe-keyword/recipeKeyword.utils.js";
+
 export type RecipeDifficulty = "Easy" | "Medium" | "Hard";
 
 export interface CreateRecipeInput {
@@ -9,6 +11,7 @@ export interface CreateRecipeInput {
   cooking_time: number;
   difficulty?: RecipeDifficulty;
   recipe_image?: string | null;
+  keywords?: RecipeKeywordInput[];
 }
 
 export interface UpdateRecipeInput {
@@ -20,6 +23,7 @@ export interface UpdateRecipeInput {
   difficulty?: RecipeDifficulty;
   cuisine_id?: number | null;
   recipe_image?: string | null;
+  keywords?: RecipeKeywordInput[];
 }
 
 export interface PublishedRecipesQuery {

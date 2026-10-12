@@ -12,6 +12,7 @@ import {
 import { getRecipeCategoryById } from "../recipe-categories/recipeCategory.service.js";
 import type { CreateRecipeInput, UpdateRecipeInput } from "./recipe.types.js";
 import { AuthenticatedRequest } from "../auth/auth.middleware.js";
+import { validateRecipeKeywords } from "./../recipe-keyword/recipeKeyword.utils.js";
 
 export const createRecipeController = async (
   req: AuthenticatedRequest,
@@ -88,7 +89,26 @@ export const createRecipeController = async (
       return;
     }
 
-    const recipe = await createRecipe(req.user.userId, input);
+    let keywords;
+
+    try {
+      keywords = validateRecipeKeywords(input.keywords);
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Invalid recipe keywords.",
+      });
+
+      return;
+    }
+
+    const recipe = await createRecipe(req.user.userId, {
+      ...input,
+      keywords,
+    });
 
     res.status(201).json({
       success: true,
@@ -188,6 +208,23 @@ export const updateRecipeController = async (
       });
 
       return;
+    }
+
+    
+    if (input.keywords !== undefined) {
+      try {
+        input.keywords = validateRecipeKeywords(input.keywords);
+      } catch (error) {
+        res.status(400).json({
+          success: false,
+          message:
+            error instanceof Error
+              ? error.message
+              : "Invalid recipe keywords.",
+        });
+
+        return;
+      }
     }
 
     const recipe = await updateRecipe(recipeId, {
