@@ -13,6 +13,7 @@ import {
   AdminUsersPage,
   CategoriesPage,
   ChefDashboardPage,
+  ChefDetailsPage,
   ChefsPage,
   ContactPage,
   DevelopmentPage,
@@ -36,6 +37,8 @@ function AppRoutes() {
         <Route path="/recipes/:slug" element={<RecipeDetailsPage />} />
 
         <Route path="/chefs" element={<ChefsPage />} />
+
+        <Route path="/chefs/:username" element={<ChefDetailsPage />} />
 
         <Route
           path="/dashboard"

@@ -11,6 +11,7 @@ export { default as RegisterPage } from "./Auth/RegisterPage";
 export { default as ChefDashboardPage } from "./Chef-Dashboard/ChefDashboardPage";
 
 export { default as ChefsPage } from "./Chefs/ChefsPage";
+export { default as ChefDetailsPage } from "./Chefs/ChefDetailsPage";
 
 export { default as HomePage } from "./Home/HomePage";
 

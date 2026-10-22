@@ -374,9 +374,10 @@ function ChefsPage() {
                   Boolean(followLoading[chefId]);
 
                 return (
-                  <article
+                  <Link
+                    to={`/chefs/${encodeURIComponent(chef.username)}`}
                     key={chef.id}
-                    className="group relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-stone-900/5 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-orange-900/70"
+                    className="group relative cursor-pointer overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-stone-900/5 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-orange-900/70"
                   >
                     <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-orange-500/5 blur-2xl transition-opacity group-hover:opacity-100" />
 
@@ -488,7 +489,7 @@ function ChefsPage() {
                         </button>
                       )}
                     </div>
-                  </article>
+                  </Link>
                 );
               })}
             </div>

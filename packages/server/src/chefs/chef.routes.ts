@@ -1,14 +1,10 @@
 import { Router } from "express";
 
-import {
-  getPublicChefsController,
-} from "./chef.controller.js";
+import { getChefByUsernameController, getPublicChefsController } from "./chef.controller.js";
 
 const router = Router();
 
-router.get(
-  "/",
-  getPublicChefsController,
-);
+router.get("/", getPublicChefsController);
+router.get("/:username", getChefByUsernameController);
 
 export default router;

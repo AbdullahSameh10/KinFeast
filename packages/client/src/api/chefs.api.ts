@@ -2,6 +2,7 @@ import apiClient from "./client";
 
 export interface Chef {
   id: number | string;
+  username: string;
   name: string;
   bio: string | null;
   profile_image: string | null;
@@ -18,6 +19,39 @@ export interface ChefsPagination {
   totalPages: number;
 }
 
+export interface ChefRecipe {
+  id: number | string;
+  author_id: number | string;
+  author_name: string;
+  slug: string;
+  cuisine_id: number | string | null;
+  category_id: number | string;
+  cuisine_name: string | null;
+  category_name: string;
+  title: string;
+  description: string | null;
+  cooking_time: number;
+  difficulty: "Easy" | "Medium" | "Hard";
+  recipe_image: string | null;
+  created_at: string;
+  status: string;
+}
+
+export interface ChefDetails extends Chef {
+  title?: string | null;
+  location?: string | null;
+  specialties?: string[] | null;
+  experience_years?: number | null;
+  certifications?: string[] | null;
+  achievements?: string[] | null;
+  philosophy?: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  contact_email?: string | null;
+  available_for_work?: boolean | null;
+  recipes: ChefRecipe[];
+}
+
 interface ChefsResponse {
   success: boolean;
   chefs: Chef[];
@@ -28,6 +62,12 @@ interface ChefsResponse {
 interface FollowStatusResponse {
   success: boolean;
   following: boolean;
+  message?: string;
+}
+
+interface ChefDetailsResponse {
+  success: boolean;
+  chef: ChefDetails;
   message?: string;
 }
 
@@ -56,6 +96,22 @@ export async function getChefs(
     chefs: response.data.chefs,
     pagination: response.data.pagination,
   };
+}
+
+export async function getChefByUsername(
+  username: string,
+): Promise<ChefDetails> {
+  const response = await apiClient.get<ChefDetailsResponse>(
+    `/chefs/${encodeURIComponent(username)}`,
+  );
+
+  if (!response.data.success) {
+    throw new Error(
+      response.data.message ?? "Unable to fetch chef details.",
+    );
+  }
+
+  return response.data.chef;
 }
 
 export async function getFollowStatus(chefId: number | string) {

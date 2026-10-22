@@ -3,7 +3,7 @@ import type {
   Response,
 } from "express";
 
-import { getPublicChefs } from "./chef.service.js";
+import { getPublicChefs, getChefByUsername } from "./chef.service.js";
 
 export const getPublicChefsController = async (
   req: Request,
@@ -41,6 +41,46 @@ export const getPublicChefsController = async (
     res.status(500).json({
       success: false,
       message: "Unable to load chefs.",
+    });
+  }
+};
+
+
+export const getChefByUsernameController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { username } = req.params;
+
+    if (typeof username !== "string" || !username.trim()) {
+      res.status(400).json({
+        success: false,
+        message: "A valid chef Username is required.",
+      });
+      return;
+    }
+
+    const chef = await getChefByUsername(username);
+
+    if (!chef) {
+      res.status(404).json({
+        success: false,
+        message: "Chef not found.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      chef,
+    });
+  } catch (error) {
+    console.error("Get chef details error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to load chef details.",
     });
   }
 };
