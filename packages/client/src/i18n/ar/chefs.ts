@@ -114,6 +114,14 @@ export const chefs = {
     communityCtaDescription:
       "اكتشف المزيد من الطهاة المبدعين واستلهم أفكارًا لوجبتك القادمة على KinFeast.",
     exploreChefs: "استكشف جميع الطهاة",
-
+    notFoundPage: {
+      badge: "غير موجود في مطبخنا",
+      title: "هذا الشيف",
+      highlight: "ليس ضمن طهاتنا.",
+      description:
+        "لم نتمكن من العثور على ملف الشيف الذي تبحث عنه. ربما تمت إزالة الملف الشخصي أو أن الرابط غير صحيح. اكتشف طهاة آخرين مميزين في مجتمع KinFeast.",
+      chefsAction: "اكتشف الطهاة",
+      homeAction: "العودة إلى الرئيسية",
+    },
   },
 } as const;

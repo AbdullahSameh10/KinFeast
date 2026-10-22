@@ -118,5 +118,14 @@ export const chefs = {
     communityCtaDescription:
       "Explore more talented chefs and find inspiration for your next meal on KinFeast.",
     exploreChefs: "Explore all chefs",
+    notFoundPage: {
+      badge: "Missing from our kitchen",
+      title: "This chef",
+      highlight: "isn't on our roster.",
+      description:
+        "We couldn't find the chef profile you were looking for. The profile may have been removed, or the link might be incorrect. Discover other talented chefs in the KinFeast community.",
+      chefsAction: "Discover Chefs",
+      homeAction: "Back to Home",
+    },
   },
 } as const;

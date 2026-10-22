@@ -30,3 +30,5 @@ export { default as DevelopmentPage } from "./DevelopmentPage";
 export { default as UserDashboardPage } from "./User/UserDashboardPage";
 
 export { default as NotFoundPage } from "./NotFoundPage";
+export { default as RecipeNotFoundPage } from "./Recipes/RecipeNotFoundPage";
+export { default as ChefNotFoundPage } from "./Chefs/ChefNotFoundPage";

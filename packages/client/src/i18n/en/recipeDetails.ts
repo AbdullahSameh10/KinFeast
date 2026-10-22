@@ -60,4 +60,15 @@ export const recipeDetails = {
     "The recipe may no longer be available or something went wrong while loading it.",
   retry: "Try again",
   notFound: "Recipe not found.",
+    notFoundPage: {
+    badge: "Recipe not found",
+    title: "This recipe",
+    highlight: "is off the menu.",
+    description:
+      "We couldn't find the recipe you're looking for. It may have been removed, or the link might be incorrect. Explore our kitchen for something delicious instead.",
+    recipesAction: "Explore Recipes",
+    homeAction: "Back to Home",
+    chefPrompt: "Looking for culinary inspiration?",
+    chefsLink: "Meet our chefs",
+  },
 } as const;

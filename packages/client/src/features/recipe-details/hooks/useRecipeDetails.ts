@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import {
   getRecipeBySlug,
@@ -38,6 +39,7 @@ export function useRecipeDetails({
     isLiked: false,
     isFavorited: false,
     isLoading: true,
+    isNotFound: false,
     error: "",
   });
 
@@ -55,11 +57,15 @@ export function useRecipeDetails({
   setState((s) => ({
     ...s,
     isLoading: true,
+    isNotFound: false,
     error: "",
   }));
 
+  let loadingRecipe = true;
+
   try {
     const recipeData = await getRecipeBySlug(slug);
+    loadingRecipe = false;
 
     const [
       ingredientsData,
@@ -118,18 +124,18 @@ export function useRecipeDetails({
       }));
     }
   } catch (err) {
-    console.error(
-      "Recipe details loading error:",
-      err,
-    );
+    console.error("Recipe details loading error:", err);
+
+    const isNotFound =
+      loadingRecipe &&
+      axios.isAxiosError(err) &&
+      err.response?.status === 404;
 
     setState((s) => ({
       ...s,
       isLoading: false,
-      error:
-        err instanceof Error
-          ? err.message
-          : errorMessage,
+      isNotFound,
+      error: isNotFound ? "" : errorMessage,
     }));
   }
 }, [slug, isAuthenticated, errorMessage]);

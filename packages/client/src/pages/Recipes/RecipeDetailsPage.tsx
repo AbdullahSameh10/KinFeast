@@ -27,6 +27,7 @@ import { MediaGallery } from "./../../features/recipe-details/components/MediaGa
 import { ReviewsSection } from "./../../features/recipe-details/components/ReviewsSection";
 import { RecipeErrorState } from "./../../features/recipe-details/components/RecipeErrorState";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import RecipeNotFoundPage from "./RecipeNotFoundPage";
 
 function RecipeDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -81,11 +82,15 @@ function RecipeDetailsPage() {
 
   if (details.isLoading) return <RecipeDetailsSkeleton />;
 
+  if (details.isNotFound) {
+    return <RecipeNotFoundPage />;
+  }
+
   if (details.error || !details.recipe) {
     return (
       <RecipeErrorState
         title={t.errorTitle}
-        message={details.error || t.errorDescription}
+        message={t.errorDescription}
         retryLabel={t.retry}
         backLabel={t.backToRecipes}
         onRetry={details.reload}

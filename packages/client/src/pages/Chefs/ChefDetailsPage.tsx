@@ -1,4 +1,4 @@
-
+import axios from "axios";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -20,6 +20,7 @@ import {
   Sparkles,
   Utensils,
   Users,
+  AlertCircle,
 } from "lucide-react";
 
 import { FaInstagram } from "react-icons/fa";
@@ -39,6 +40,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import ChefNotFoundPage from "./ChefNotFoundPage";
 
 function ChefDetailsPage() {
   const { username } = useParams<{ username: string }>();
@@ -49,6 +51,7 @@ function ChefDetailsPage() {
   const [chef, setChef] = useState<ChefDetails | null>(null);
   const [following, setFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNotFound, setIsNotFound] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [error, setError] = useState("");
   const [followError, setFollowError] = useState("");
@@ -99,13 +102,15 @@ function ChefDetailsPage() {
   const loadChef = useCallback(async () => {
     if (!username?.trim()) {
       setChef(null);
-      setError(t.notFoundDescription);
+      setIsNotFound(true);
+      setError("");
       setIsLoading(false);
       return;
     }
 
     try {
       setIsLoading(true);
+      setIsNotFound(false);
       setError("");
       setFollowError("");
 
@@ -127,12 +132,16 @@ function ChefDetailsPage() {
         setFollowing(false);
       }
     } catch (requestError) {
-      console.error("Chef profile loading error:", requestError);
+      console.error("Chef details loading error:", requestError);
+
+      const isMissingChef =
+        axios.isAxiosError(requestError) &&
+        requestError.response?.status === 404;
+
       setChef(null);
+      setIsNotFound(isMissingChef);
       setError(
-        requestError instanceof Error
-          ? requestError.message
-          : t.errorDescription,
+        isMissingChef ? "" : t.errorDescription,
       );
     } finally {
       setIsLoading(false);
@@ -141,7 +150,6 @@ function ChefDetailsPage() {
     username,
     isAuthenticated,
     user,
-    t.notFoundDescription,
     t.errorDescription,
   ]);
 
@@ -431,39 +439,46 @@ function ChefDetailsPage() {
     );
   }
 
-  if (error || !chef) {
-    const notFound = !chef;
+  if (isNotFound) {
+    return <ChefNotFoundPage />;
+  }
 
+  if (error || !chef) {
     return (
       <main className="flex min-h-[70vh] items-center justify-center bg-stone-50 px-4 py-16 dark:bg-stone-950">
-        <section className="w-full max-w-xl rounded-3xl border border-stone-200 bg-white p-7 text-center shadow-sm dark:border-stone-800 dark:bg-stone-900 sm:p-10">
+        <div className="mx-auto w-full max-w-2xl rounded-3xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-800 dark:bg-stone-900 sm:p-12">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
-            {notFound ? <ChefHat size={30} /> : <RefreshCw size={28} />}
+            <AlertCircle size={30} />
           </div>
+
           <h1 className="mt-5 text-2xl font-black text-stone-950 dark:text-white">
-            {notFound ? t.notFoundTitle : t.errorTitle}
+            {t.errorTitle}
           </h1>
-          <p role="alert" className="mt-3 text-sm leading-7 text-stone-600 dark:text-stone-400">
-            {error || t.notFoundDescription}
+
+          <p
+            role="alert"
+            className="mt-3 leading-7 text-stone-600 dark:text-stone-400"
+          >
+            {t.errorDescription}
           </p>
-          {!notFound && (
-            <button
-              type="button"
-              onClick={() => void loadChef()}
-              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 font-bold text-white transition hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-            >
-              <RefreshCw size={17} aria-hidden="true" />
-              {t.retry}
-            </button>
-          )}
+
+          <button
+            type="button"
+            onClick={() => void loadChef()}
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 font-bold text-white transition hover:bg-orange-600"
+          >
+            <RefreshCw size={17} />
+            {t.retry}
+          </button>
+
           <Link
             to="/chefs"
-            className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border border-stone-200 px-5 py-3 font-bold text-stone-700 transition hover:border-orange-300 hover:text-orange-600 dark:border-stone-700 dark:text-stone-200 dark:hover:border-orange-800"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl border border-stone-200 px-5 py-3 font-bold text-stone-700 transition hover:border-orange-300 hover:text-orange-600 dark:border-stone-700 dark:text-stone-200 dark:hover:border-orange-800 dark:hover:text-orange-400"
           >
-            <ArrowLeft size={17} className="rtl:rotate-180" aria-hidden="true" />
+            <ArrowLeft size={17} className="rtl:rotate-180" />
             {t.back}
           </Link>
-        </section>
+        </div>
       </main>
     );
   }
