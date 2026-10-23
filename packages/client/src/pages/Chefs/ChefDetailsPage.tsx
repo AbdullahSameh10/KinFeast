@@ -43,6 +43,10 @@ import { translations } from "../../i18n";
 import ChefNotFoundPage from "./ChefNotFoundPage";
 
 function ChefDetailsPage() {
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+    
   const { username } = useParams<{ username: string }>();
   const { language } = useLanguage();
   const { user, isAuthenticated } = useAuth();

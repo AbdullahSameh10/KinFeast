@@ -8,6 +8,7 @@ import {
   getPendingRecipes,
   createRecipe,
   getTrendingRecipes,
+  searchRecipesByIngredients
 } from "./recipe.service.js";
 import { getRecipeCategoryById } from "../recipe-categories/recipeCategory.service.js";
 import type { CreateRecipeInput, UpdateRecipeInput } from "./recipe.types.js";
@@ -508,6 +509,77 @@ export const getPendingRecipesController = async (
     res.status(500).json({
       success: false,
       message: "Unable to fetch pending recipes.",
+    });
+  }
+};
+
+
+export const searchRecipesByIngredientsController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const rawIngredients = req.query.ingredients;
+
+    const ingredientNames = (
+      Array.isArray(rawIngredients)
+        ? rawIngredients
+        : [rawIngredients]
+    )
+      .filter(
+        (value): value is string => typeof value === "string",
+      )
+      .flatMap((value) => value.split(","))
+      .map((name) => name.trim())
+      .filter(Boolean);
+
+    const uniqueIngredients = [
+      ...new Set(
+        ingredientNames.map((name) => name.toLocaleLowerCase()),
+      ),
+    ];
+
+    if (uniqueIngredients.length === 0) {
+      res.status(400).json({
+        success: false,
+        message: "Please provide at least one ingredient.",
+      });
+
+      return;
+    }
+
+    if (uniqueIngredients.length > 30) {
+      res.status(400).json({
+        success: false,
+        message: "You can search with up to 30 ingredients.",
+      });
+
+      return;
+    }
+
+    const result = await searchRecipesByIngredients(
+      uniqueIngredients,
+    );
+
+    const message =
+      result.mode === "matches"
+        ? "Recipes matching your ingredients were found."
+        : result.mode === "fallback"
+          ? "No recipes matched the usual criteria. Here are recipes that use at least one of your ingredients."
+          : "No recipes containing your selected ingredients were found. Try different ingredients.";
+
+    res.status(200).json({
+      success: true,
+      message,
+      mode: result.mode,
+      recipes: result.recipes,
+    });
+  } catch (error) {
+    console.error("Ingredient recipe search error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to search recipes by ingredients.",
     });
   }
 };

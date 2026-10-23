@@ -612,3 +612,177 @@ export const getPendingRecipes = async () => {
 
   return result.rows;
 };
+
+
+export const searchRecipesByIngredients = async (
+  ingredientNames: string[],
+) => {
+  const normalizedIngredients = [
+    ...new Set(
+      ingredientNames
+        .map((name) => name.trim().toLocaleLowerCase())
+        .filter(Boolean),
+    ),
+  ];
+
+  const result = await pool.query(
+    `
+      WITH searched_ingredients AS (
+        SELECT DISTINCT LOWER(TRIM(name)) AS name
+        FROM UNNEST($1::text[]) AS input(name)
+      ),
+
+      recipe_matches AS (
+        SELECT
+          r.id,
+          r.author_id,
+          u.name AS author_name,
+          r.slug,
+          r.title,
+          r.description,
+          r.cooking_time,
+          r.difficulty,
+          r.recipe_image,
+          r.created_at,
+
+          COUNT(ri.ingredient_id)::integer
+            AS total_ingredient_count,
+
+          COUNT(ri.ingredient_id) FILTER (
+            WHERE EXISTS (
+              SELECT 1
+              FROM searched_ingredients si
+              WHERE si.name = LOWER(TRIM(i.name))
+            )
+          )::integer AS matched_ingredient_count,
+
+          COALESCE(
+            JSONB_AGG(
+              JSONB_BUILD_OBJECT(
+                'id', i.id,
+                'name', i.name,
+                'quantity', ri.quantity,
+                'is_available',
+                  EXISTS (
+                    SELECT 1
+                    FROM searched_ingredients si
+                    WHERE si.name = LOWER(TRIM(i.name))
+                  )
+              )
+              ORDER BY i.name
+            ),
+            '[]'::jsonb
+          ) AS ingredients,
+
+          COALESCE(
+            JSONB_AGG(
+              JSONB_BUILD_OBJECT(
+                'id', i.id,
+                'name', i.name,
+                'quantity', ri.quantity
+              )
+              ORDER BY i.name
+            ) FILTER (
+              WHERE EXISTS (
+                SELECT 1
+                FROM searched_ingredients si
+                WHERE si.name = LOWER(TRIM(i.name))
+              )
+            ),
+            '[]'::jsonb
+          ) AS matched_ingredients,
+
+          COALESCE(
+            JSONB_AGG(
+              JSONB_BUILD_OBJECT(
+                'id', i.id,
+                'name', i.name,
+                'quantity', ri.quantity
+              )
+              ORDER BY i.name
+            ) FILTER (
+              WHERE NOT EXISTS (
+                SELECT 1
+                FROM searched_ingredients si
+                WHERE si.name = LOWER(TRIM(i.name))
+              )
+            ),
+            '[]'::jsonb
+          ) AS missing_ingredients
+
+        FROM recipes r
+
+        JOIN users u
+          ON u.id = r.author_id
+
+        JOIN recipe_ingredients ri
+          ON ri.recipe_id = r.id
+
+        JOIN ingredients i
+          ON i.id = ri.ingredient_id
+
+        WHERE r.status = 'published'
+
+        GROUP BY
+          r.id,
+          r.author_id,
+          u.name,
+          r.slug,
+          r.title,
+          r.description,
+          r.cooking_time,
+          r.difficulty,
+          r.recipe_image,
+          r.created_at
+
+        HAVING COUNT(ri.ingredient_id) FILTER (
+          WHERE EXISTS (
+            SELECT 1
+            FROM searched_ingredients si
+            WHERE si.name = LOWER(TRIM(i.name))
+          )
+        ) > 0
+      )
+
+      SELECT
+        *,
+        (
+          total_ingredient_count - matched_ingredient_count
+        )::integer AS missing_ingredient_count
+
+      FROM recipe_matches
+
+      ORDER BY
+        matched_ingredient_count DESC,
+        missing_ingredient_count ASC,
+        created_at DESC,
+        id DESC
+    `,
+    [normalizedIngredients],
+  );
+
+  const recipes = result.rows;
+
+  const matchingRecipes = recipes.filter(
+    (recipe) => recipe.missing_ingredient_count <= 4,
+  );
+
+  if (matchingRecipes.length > 0) {
+    return {
+      mode: "matches" as const,
+      recipes: matchingRecipes.slice(0, 48),
+    };
+  }
+
+  if (recipes.length > 0) {
+    return {
+      mode: "fallback" as const,
+      recipes: recipes.slice(0, 48),
+    };
+  }
+
+  return {
+    mode: "no_matches" as const,
+    recipes: [],
+  };
+};

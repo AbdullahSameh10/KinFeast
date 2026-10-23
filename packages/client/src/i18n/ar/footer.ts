@@ -10,12 +10,14 @@
       title: "استكشف",
       links: [
         "الوصفات",
+        "اطبخ بما لديك",
         "الرائج",
         "التصنيفات",
         "أبرز الطهاة",
       ],
       hrefs: [
         "/recipes",
+        "/cook-with-what-you-have",
         "/trending",
         "/categories",
         "/featured-chefs",

@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
+import { useNavigate } from "react-router-dom";
 
 const suggestedIngredients = [
   "tomatoes",
@@ -29,6 +30,7 @@ function CookWithWhatYouHave() {
   const [input, setInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const t = translations[language].cookWithWhatYouHave;
 
   const addIngredient = (ingredient: string) => {
@@ -47,8 +49,10 @@ function CookWithWhatYouHave() {
   };
 
   const handleSubmit = () => {
-    if (input.trim()) {
-      addIngredient(input);
+    const value = input.trim();
+
+    if (value) {
+      addIngredient(value);
     }
   };
 
@@ -253,18 +257,16 @@ function CookWithWhatYouHave() {
                           className="animate-scale-in group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500/10 to-amber-500/10 px-4 py-2 text-sm font-medium text-orange-700 shadow-sm backdrop-blur-sm transition-all hover:shadow-md dark:from-orange-400/10 dark:to-amber-400/10 dark:text-orange-300"
                         >
                           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-orange-400" />
-                          {
-                            t.suggestedIngredients[
-                              ingredient.toLowerCase() as keyof typeof t.suggestedIngredients
-                            ]
-                          }
+                          {t.suggestedIngredients[
+                            ingredient.toLowerCase() as keyof typeof t.suggestedIngredients
+                          ] ?? ingredient}
                           <button
                             type="button"
                             onClick={() => removeIngredient(ingredient)}
-                            aria-label={`{${t.finder.removeIngredient} ${
+                            aria-label={`${t.finder.removeIngredient} ${
                               t.suggestedIngredients[
                                 ingredient.toLowerCase() as keyof typeof t.suggestedIngredients
-                              ]
+                              ] ?? ingredient
                             }`}
                             className="rounded-full p-0.5 transition-all hover:scale-110 hover:bg-orange-500/20"
                           >
@@ -309,6 +311,15 @@ function CookWithWhatYouHave() {
                   type="button"
                   disabled={ingredients.length === 0}
                   className="group relative mt-8 inline-flex h-14 w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 text-base font-semibold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+                  onClick={() => {
+                    const params = new URLSearchParams();
+
+                    ingredients.forEach((ingredient) => {
+                      params.append("ingredient", ingredient);
+                    });
+
+                    navigate(`/cook-with-what-you-have?ingredients=${ingredients.map((ingredient) => ingredient)}`);
+                  }}
                 >
                   <span className="relative z-10 flex items-center gap-3">
                     <Flame size={18} />

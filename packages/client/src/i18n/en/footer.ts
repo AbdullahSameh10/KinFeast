@@ -10,12 +10,14 @@
       title: "Discover",
       links: [
         "Recipes",
+        "Cook With What You Have",
         "Trending",
         "Categories",
         "Featured Chefs",
       ],
       hrefs: [
         "/recipes",
+        "/cook-with-what-you-have",
         "/trending",
         "/categories",
         "/featured-chefs",

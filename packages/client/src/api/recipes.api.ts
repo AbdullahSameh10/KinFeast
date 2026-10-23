@@ -157,3 +157,64 @@ export async function getCuisines(): Promise<Cuisine[]> {
 
   return response.data.cuisines;
 }
+
+
+export interface IngredientSearchRecipe {
+  id: number | string;
+  author_id: number | string;
+  author_name: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  cooking_time: number | null;
+  difficulty: "Easy" | "Medium" | "Hard";
+  recipe_image: string | null;
+  created_at: string;
+  total_ingredient_count: number;
+  matched_ingredient_count: number;
+  missing_ingredient_count: number;
+  ingredients: {
+    id: number | string;
+    name: string;
+    quantity: string | null;
+    is_available: boolean;
+  }[];
+  matched_ingredients: {
+    id: number | string;
+    name: string;
+    quantity: string | null;
+  }[];
+  missing_ingredients: {
+    id: number | string;
+    name: string;
+    quantity: string | null;
+  }[];
+}
+
+export interface IngredientSearchResponse {
+  success: boolean;
+  message: string;
+  mode: "matches" | "fallback" | "no_matches";
+  recipes: IngredientSearchRecipe[];
+}
+
+export async function searchRecipesByIngredients(
+  ingredients: string[],
+): Promise<IngredientSearchResponse> {
+  const response = await apiClient.get<IngredientSearchResponse>(
+    "/recipes/search-by-ingredients",
+    {
+      params: {
+        ingredients: ingredients.join(","),
+      },
+    },
+  );
+
+  if (!response.data.success) {
+    throw new Error(
+      response.data.message || "Unable to search recipes by ingredients.",
+    );
+  }
+
+  return response.data;
+}

@@ -49,6 +49,10 @@ function ChefAvatar({ chef }: { chef: Chef }) {
 function ChefsPage() {
   useDocumentTitle("Chefs");
 
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
   const { language } = useLanguage();
   const { user, isAuthenticated } = useAuth();
 

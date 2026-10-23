@@ -24,6 +24,7 @@ import {
   RegisterPage,
   TrendingPage,
   UserDashboardPage,
+  CookWithWhatYouHavePage
 } from "../pages";
 
 function AppRoutes() {
@@ -35,6 +36,8 @@ function AppRoutes() {
         <Route path="/recipes" element={<RecipesPage />} />
 
         <Route path="/recipes/:slug" element={<RecipeDetailsPage />} />
+
+        <Route path="/cook-with-what-you-have" element={<CookWithWhatYouHavePage />} />
 
         <Route path="/chefs" element={<ChefsPage />} />
 
