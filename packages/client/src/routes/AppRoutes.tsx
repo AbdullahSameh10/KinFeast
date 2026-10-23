@@ -24,7 +24,16 @@ import {
   RegisterPage,
   TrendingPage,
   UserDashboardPage,
-  CookWithWhatYouHavePage
+  CookWithWhatYouHavePage,
+  PrivacyPolicyPage,
+  TermsPage,
+  CookiesPolicyPage,
+  AccessibilityPage,
+  CommunityGuidelinesPage,
+  PressPage,
+  HowItWorksPage,
+  HelpCenterPage,
+  ApiLicensingPage
 } from "../pages";
 
 function AppRoutes() {
@@ -151,9 +160,9 @@ function AppRoutes() {
 
         <Route path="/careers" element={<DevelopmentPage />} />
 
-        <Route path="/how-it-works" element={<DevelopmentPage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
 
-        <Route path="/press" element={<DevelopmentPage />} />
+        <Route path="/press" element={<PressPage />} />
 
         <Route path="/business/restaurants" element={<DevelopmentPage />} />
 
@@ -161,19 +170,19 @@ function AppRoutes() {
 
         <Route path="/business/advertising" element={<DevelopmentPage />} />
 
-        <Route path="/business/api" element={<DevelopmentPage />} />
+        <Route path="/business/api" element={<ApiLicensingPage />} />
 
-        <Route path="/help" element={<DevelopmentPage />} />
+        <Route path="/help" element={<HelpCenterPage />} />
 
-        <Route path="/privacy" element={<DevelopmentPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
-        <Route path="/terms" element={<DevelopmentPage />} />
+        <Route path="/terms" element={<TermsPage />} />
 
-        <Route path="/cookies" element={<DevelopmentPage />} />
+        <Route path="/cookies" element={<CookiesPolicyPage />} />
 
-        <Route path="/accessibility" element={<DevelopmentPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
 
-        <Route path="/community-guidelines" element={<DevelopmentPage />} />
+        <Route path="/community-guidelines" element={<CommunityGuidelinesPage />} />
 
         <Route path="/social/instagram" element={<DevelopmentPage />} />
 

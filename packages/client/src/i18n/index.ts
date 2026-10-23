@@ -46,6 +46,15 @@ import { categoriesPage as arCategoriesPage } from "./ar/categoriesPage";
 import { recipeCategories as enRecipeCategories } from "./en/recipeCategories";
 import { recipeCategories as arRecipeCategories } from "./ar/recipeCategories";
 
+import { press as enPress } from "./en/press";
+import { press as arPress } from "./ar/press";
+
+import { howItWorks as enHowItWorks } from "./en/howItWorks";
+import { howItWorks as arHowItWorks } from "./ar/howItWorks";
+
+import { helpCenter as enHelpCenter } from "./en/helpCenter";
+import { helpCenter as arHelpCenter } from "./ar/helpCenter";
+
 export const translations = {
   en: {
     navbar: enNavbar,
@@ -64,6 +73,9 @@ export const translations = {
     auth: enAuth,
     notFound: enNotFound,
     recipeCategories: enRecipeCategories,    
+    press: enPress,
+    howItWorks: enHowItWorks,
+    helpCenter: enHelpCenter,
   },
   ar: {
     navbar: arNavbar,
@@ -82,5 +94,8 @@ export const translations = {
     auth: arAuth,
     notFound: arNotFound,
     recipeCategories: arRecipeCategories,
+    press: arPress,
+    howItWorks: arHowItWorks,
+    helpCenter: arHelpCenter,
   },
 } as const;

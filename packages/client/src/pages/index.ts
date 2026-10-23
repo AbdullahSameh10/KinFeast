@@ -33,3 +33,13 @@ export { default as UserDashboardPage } from "./User/UserDashboardPage";
 export { default as NotFoundPage } from "./NotFoundPage";
 export { default as RecipeNotFoundPage } from "./Recipes/RecipeNotFoundPage";
 export { default as ChefNotFoundPage } from "./Chefs/ChefNotFoundPage";
+
+export { default as PrivacyPolicyPage } from "./PrivacyPolicyPage";
+export { default as TermsPage } from "./TermsPage";
+export { default as CookiesPolicyPage } from "./CookiesPolicyPage";
+export { default as AccessibilityPage } from "./AccessibilityPage";
+export { default as CommunityGuidelinesPage } from "./CommunityGuidelinesPage";
+export { default as PressPage } from "./PressPage";
+export { default as HowItWorksPage } from "./HowItWorksPage";
+export { default as HelpCenterPage } from "./HelpCenterPage";
+export { default as ApiLicensingPage } from "./ApiLicensingPage";
