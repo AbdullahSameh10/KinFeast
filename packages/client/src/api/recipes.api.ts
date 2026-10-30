@@ -166,10 +166,15 @@ export interface IngredientSearchRecipe {
   slug: string;
   title: string;
   description: string | null;
+  category_id: number | string;
+  category_name: string;
+  cuisine_id: number | string | null;
+  cuisine_name: string | null;
   cooking_time: number | null;
   difficulty: "Easy" | "Medium" | "Hard";
   recipe_image: string | null;
   created_at: string;
+  popularity_score: number;
   total_ingredient_count: number;
   matched_ingredient_count: number;
   missing_ingredient_count: number;

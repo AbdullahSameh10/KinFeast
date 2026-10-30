@@ -640,10 +640,40 @@ export const searchRecipesByIngredients = async (
           r.slug,
           r.title,
           r.description,
+          r.category_id,
+          rc.name AS category_name,
+          r.cuisine_id,
+          c.name AS cuisine_name,
           r.cooking_time,
           r.difficulty,
           r.recipe_image,
           r.created_at,
+
+          (
+            COALESCE((
+              SELECT COUNT(*)::integer
+              FROM recipe_views rv
+              WHERE rv.recipe_id = r.id
+            ), 0) * 1
+
+            + COALESCE((
+              SELECT COUNT(*)::integer
+              FROM recipe_likes rl
+              WHERE rl.recipe_id = r.id
+            ), 0) * 3
+
+            + COALESCE((
+              SELECT COUNT(*)::integer
+              FROM favorites f
+              WHERE f.recipe_id = r.id
+            ), 0) * 2
+
+            + COALESCE((
+              SELECT COUNT(*)::integer
+              FROM recipe_reviews rr
+              WHERE rr.recipe_id = r.id
+            ), 0) * 4
+          )::integer AS popularity_score,
 
           COUNT(ri.ingredient_id)::integer
             AS total_ingredient_count,
@@ -715,6 +745,12 @@ export const searchRecipesByIngredients = async (
         JOIN users u
           ON u.id = r.author_id
 
+        LEFT JOIN recipe_categories rc
+          ON rc.id = r.category_id
+
+        LEFT JOIN cuisines c
+          ON c.id = r.cuisine_id
+
         JOIN recipe_ingredients ri
           ON ri.recipe_id = r.id
 
@@ -730,6 +766,10 @@ export const searchRecipesByIngredients = async (
           r.slug,
           r.title,
           r.description,
+          r.category_id,
+          rc.name,
+          r.cuisine_id,
+          c.name,
           r.cooking_time,
           r.difficulty,
           r.recipe_image,
@@ -763,20 +803,15 @@ export const searchRecipesByIngredients = async (
 
   const recipes = result.rows;
 
-  const matchingRecipes = recipes.filter(
+    const matchingRecipes = recipes.filter(
     (recipe) => recipe.missing_ingredient_count <= 4,
   );
 
-  if (matchingRecipes.length > 0) {
-    return {
-      mode: "matches" as const,
-      recipes: matchingRecipes.slice(0, 48),
-    };
-  }
-
   if (recipes.length > 0) {
     return {
-      mode: "fallback" as const,
+      mode: matchingRecipes.length > 0
+        ? ("matches" as const)
+        : ("fallback" as const),
       recipes: recipes.slice(0, 48),
     };
   }

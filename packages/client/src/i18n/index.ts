@@ -55,6 +55,9 @@ import { howItWorks as arHowItWorks } from "./ar/howItWorks";
 import { helpCenter as enHelpCenter } from "./en/helpCenter";
 import { helpCenter as arHelpCenter } from "./ar/helpCenter";
 
+import { cookWithWhatYouHavePage as enCookWithWhatYouHavePage } from "./en/cookWithWhatYouHavePage";
+import { cookWithWhatYouHavePage as arCookWithWhatYouHavePage } from "./ar/cookWithWhatYouHavePage";
+
 export const translations = {
   en: {
     navbar: enNavbar,
@@ -76,6 +79,7 @@ export const translations = {
     press: enPress,
     howItWorks: enHowItWorks,
     helpCenter: enHelpCenter,
+    cookWithWhatYouHavePage: enCookWithWhatYouHavePage,
   },
   ar: {
     navbar: arNavbar,
@@ -97,5 +101,6 @@ export const translations = {
     press: arPress,
     howItWorks: arHowItWorks,
     helpCenter: arHelpCenter,
+    cookWithWhatYouHavePage: arCookWithWhatYouHavePage,
   },
 } as const;
