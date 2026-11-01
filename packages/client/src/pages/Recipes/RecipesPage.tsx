@@ -1,4 +1,4 @@
-import { Flame, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Flame, SlidersHorizontal, Utensils } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -248,6 +248,35 @@ function RecipesPage() {
             placeholder={t.search.placeholder}
             clearLabel={t.accessibility.clearSearch}
           />
+
+          {/* Ingredient Search CTA */}
+          <div className="mt-6">
+            <Link
+              to="/cook-with-what-you-have"
+              className="group inline-flex w-full items-center justify-between gap-4 rounded-2xl border border-orange-200/80 bg-white/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-400 hover:shadow-md dark:border-orange-900/50 dark:bg-stone-900/70 dark:hover:border-orange-700 sm:max-w-xl"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 transition-colors group-hover:bg-orange-500 group-hover:text-white dark:bg-orange-950/60 dark:text-orange-400">
+                  <Utensils size={22} />
+                </div>
+
+                <div className="text-start">
+                  <p className="text-sm font-bold text-stone-900 dark:text-white">
+                    {t.cta.title}
+                  </p>
+
+                  <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                    {t.cta.description}
+                  </p>
+                </div>
+              </div>
+
+              <ArrowRight
+                size={19}
+                className="shrink-0 text-orange-500 transition-transform group-hover:-translate-x-1 rtl:rotate-180"
+              />
+            </Link>
+          </div>
         </div>
       </section>
 

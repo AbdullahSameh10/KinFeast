@@ -4,6 +4,11 @@ export const recipes = {
   description:
     "Explore delicious recipes from our growing community of cooks and chefs. Search, filter, and find something worth making today.",
 
+  cta: {
+    title: "Got ingredients? Find your next meal!",
+    description: "Discover recipes using what you already have."
+  },
+
   discovery: {
     badge: "What's popular right now",
     description:
