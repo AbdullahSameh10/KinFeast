@@ -252,7 +252,7 @@ function Footer() {
 
                             {"hiringBadge" in column &&
                               index === 3 && (
-                                <span className="ms-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                <span className="ms-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
                                   {String(column.hiringBadge)}
                                 </span>
                               )}

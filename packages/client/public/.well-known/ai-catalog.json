@@ -1,0 +1,10 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "KinFeast",
+    "identifier": "https://kinfeast.vercel.app",
+    "documentationUrl": "https://kinfeast.vercel.app/llms.txt",
+    "logoUrl": "https://kinfeast.vercel.app/logo.png"
+  },
+  "entries": []
+}

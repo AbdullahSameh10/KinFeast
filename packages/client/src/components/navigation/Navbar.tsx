@@ -148,14 +148,16 @@ function Navbar() {
             src={logoDark}
             alt="KinFeast"
             width={150}
-            className="hidden scale-110 dark:block"
+            height={40}
+            className="hidden h-auto w-[150px] dark:block"
           />
 
           <img
             src={logoLight}
             alt="KinFeast"
             width={150}
-            className="block scale-110 dark:hidden"
+            height={42}
+            className="block h-auto w-[150px] dark:hidden"
           />
         </Link>
 
@@ -405,17 +407,17 @@ function Navbar() {
               <img
                 src={logoDark}
                 alt="KinFeast"
-                width={180}
-                height={48}
-                className="hidden scale-90 dark:block"
+                width={150}
+                height={40}
+                className="hidden h-auto w-[150px] dark:block"
               />
 
               <img
                 src={logoLight}
                 alt="KinFeast"
-                width={180}
-                height={48}
-                className="block scale-90 dark:hidden"
+                width={150}
+                height={40}
+                className="hidden h-auto w-[150px] dark:block"
               />
             </Link>
 

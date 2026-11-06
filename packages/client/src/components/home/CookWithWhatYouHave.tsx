@@ -137,34 +137,6 @@ function CookWithWhatYouHave() {
                 </div>
               ))}
             </div>
-
-            {/* Quick Stats */}
-            <div className="mt-8 flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-2 rtl:flex-row-reverse">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-orange-400 to-amber-400 dark:border-stone-900"
-                      style={{
-                        backgroundImage: `url(https://i.pravatar.cc/40?img=${i + 20})`,
-                      }}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-stone-600 dark:text-stone-300">
-                  <span className="font-bold text-stone-900 dark:text-white">
-                    2.4k+
-                  </span>{" "}
-                  {t.stats.savedToday}
-                </span>
-              </div>
-              <div className="text-sm text-stone-400">•</div>
-              <div className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
-                <Flame size={14} className="text-orange-400" />
-                <span>{t.stats.trendingNow}</span>
-              </div>
-            </div>
           </div>
 
           {/* Ingredient Finder Card */}

@@ -197,6 +197,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
         <dl className="mt-5 grid grid-cols-[auto_auto_1fr] border-t-[3px] border-stone-900 pt-3 dark:border-stone-100">
           {/* Time */}
           <div className="pe-4">
+            <dt className="sr-only">Cook time</dt>
             <dd className="flex items-baseline gap-1 font-serif text-3xl font-semibold tabular-nums leading-none text-stone-900 dark:text-stone-50">
               {recipe.cooking_time !== null ? recipe.cooking_time : "–"}
               {recipe.cooking_time !== null && (
@@ -209,9 +210,9 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 
           {/* Difficulty meter */}
           <div className="flex flex-col justify-center gap-1.5 border-s border-stone-200 px-4 dark:border-stone-700">
+            <dt className="sr-only">Difficulty</dt>
             <dd
               className="flex items-center gap-1"
-              role="img"
               aria-label={t.difficulty[recipe.difficulty]}
             >
               {[1, 2, 3].map((step) => (
@@ -233,6 +234,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 
           {/* Cuisine */}
           <div className="flex min-w-0 items-center justify-end border-s border-stone-200 ps-4 dark:border-stone-700">
+            <dt className="sr-only">Cuisine</dt>
             {recipe.cuisine_name && (
               <dd className="truncate text-sm font-semibold text-emerald-800 dark:text-emerald-300">
                 {recipe.cuisine_name}

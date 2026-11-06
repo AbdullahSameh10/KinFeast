@@ -48,28 +48,6 @@ export default function HeroSection() {
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1s_infinite]" />
             </button>
           </div>
-          {/* Social Proof */}
-          <div className="mt-10 flex items-center gap-6">
-            <div className="flex -space-x-2">
-              {[1, 2, 3, 4].map((i) => (
-                <img
-                  key={i}
-                  src={`https://i.pravatar.cc/40?img=${i + 10}`}
-                  alt=""
-                  className="h-8 w-8 rounded-full border-2 border-white object-cover dark:border-stone-900"
-                />
-              ))}
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-orange-500 text-xs font-bold text-white dark:border-stone-900">
-                +2k
-              </div>
-            </div>
-            <div className="text-sm text-stone-600 dark:text-stone-300">
-              <span className="font-semibold text-stone-900 dark:text-white">
-                2,458
-              </span>{" "}
-              {t.socialProof.recipesShared}
-            </div>
-          </div>
         </div>
         {/* Hero Image */}
         <div className="relative mx-auto w-full max-w-2xl lg:-mr-8">
