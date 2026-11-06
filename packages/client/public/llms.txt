@@ -1,0 +1,34 @@
+
+# KinFeast
+
+> KinFeast is a recipe discovery platform where people can
+> explore delicious recipes, discover talented chefs, and
+> find inspiration for their next meal.
+
+## Main Pages
+
+- [Home](https://kinfeast.vercel.app/)
+- [Recipes](https://kinfeast.vercel.app/recipes)
+- [Categories](https://kinfeast.vercel.app/categories)
+- [Chefs](https://kinfeast.vercel.app/chefs)
+- [Trending Recipes](https://kinfeast.vercel.app/trending)
+- [Cook With What You Have](https://kinfeast.vercel.app/cook-with-what-you-have)
+
+## About KinFeast
+
+- [About Us](https://kinfeast.vercel.app/about)
+- [How It Works](https://kinfeast.vercel.app/how-it-works)
+- [Press & Media](https://kinfeast.vercel.app/press)
+- [Help Center](https://kinfeast.vercel.app/help)
+
+## Policies
+
+- [Privacy Policy](https://kinfeast.vercel.app/privacy)
+- [Terms of Use](https://kinfeast.vercel.app/terms)
+- [Cookies Policy](https://kinfeast.vercel.app/cookies)
+- [Accessibility](https://kinfeast.vercel.app/accessibility)
+- [Community Guidelines](https://kinfeast.vercel.app/community-guidelines)
+
+## Contact
+
+- [Contact KinFeast](https://kinfeast.vercel.app/contact)

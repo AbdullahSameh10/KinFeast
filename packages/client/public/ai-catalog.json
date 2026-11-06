@@ -1,0 +1,25 @@
+{
+  "name": "KinFeast",
+  "url": "https://kinfeast.vercel.app/",
+  "description": "A recipe discovery platform for exploring delicious recipes, discovering chefs, and finding cooking inspiration.",
+  "language": ["en", "ar"],
+  "resources": [
+    {
+      "type": "website",
+      "name": "KinFeast Homepage",
+      "url": "https://kinfeast.vercel.app/"
+    },
+    {
+      "type": "recipes",
+      "url": "https://kinfeast.vercel.app/recipes"
+    },
+    {
+      "type": "chefs",
+      "url": "https://kinfeast.vercel.app/chefs"
+    },
+    {
+      "type": "categories",
+      "url": "https://kinfeast.vercel.app/categories"
+    }
+  ]
+}
