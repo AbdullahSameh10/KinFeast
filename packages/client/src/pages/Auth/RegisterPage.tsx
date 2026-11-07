@@ -27,7 +27,7 @@ import {
 } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi"
 
-import heroIllustration from "../../assets/hero illustration.png";
+import heroIllustration from "../../assets/hero illustration.webp";
 import {
   getMarketingSources,
   type MarketingSource,

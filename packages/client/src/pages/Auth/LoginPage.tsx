@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import heroIllustration from "../../assets/hero illustration.png";
+import heroIllustration from "../../assets/hero illustration.webp";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
