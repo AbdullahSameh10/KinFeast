@@ -1,5 +1,5 @@
 import { ArrowRight, Clock, Sparkles, TrendingUp } from "lucide-react";
-import heroIllustration from "../../assets/hero illustration.png";
+import heroIllustration from "../../assets/hero illustration.webp";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
 
