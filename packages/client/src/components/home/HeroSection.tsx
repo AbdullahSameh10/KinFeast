@@ -55,6 +55,8 @@ export default function HeroSection() {
           <img
             src={heroIllustration}
             alt={t.imageAlt}
+            width={1070}
+            height={1024}
             className="relative h-auto w-full object-contain"
           />
           {/* Floating Stats */}

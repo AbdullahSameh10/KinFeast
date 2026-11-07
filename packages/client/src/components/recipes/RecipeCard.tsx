@@ -211,14 +211,13 @@ function RecipeCard({ recipe }: RecipeCardProps) {
           {/* Difficulty meter */}
           <div className="flex flex-col justify-center gap-1.5 border-s border-stone-200 px-4 dark:border-stone-700">
             <dt className="sr-only">Difficulty</dt>
-            <dd
-              className="flex items-center gap-1"
-              aria-label={t.difficulty[recipe.difficulty]}
+            <dd 
+              className="flex items-center gap-1" 
+              aria-hidden="true"
             >
               {[1, 2, 3].map((step) => (
                 <span
                   key={step}
-                  aria-hidden="true"
                   className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
                     step <= level
                       ? DIFFICULTY_METER_COLORS[level]

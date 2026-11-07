@@ -1,7 +1,7 @@
 function RecipeCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-3xl border border-stone-200/80 bg-white dark:border-stone-800 dark:bg-stone-900">
-      <div className="aspect-[16/10] animate-pulse bg-stone-200 dark:bg-stone-800" />
+      <div className="aspect-[5/4] animate-pulse bg-stone-200 dark:bg-stone-800" />
 
       <div className="space-y-4 p-5">
         <div className="h-6 w-4/5 animate-pulse rounded-lg bg-stone-200 dark:bg-stone-800" />
