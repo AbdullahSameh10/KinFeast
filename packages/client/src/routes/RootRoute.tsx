@@ -3,9 +3,9 @@ import HomePage from "../pages/Home/HomePage";
 import { useAuth } from "../hooks/useAuth";
 
 function RootRoute() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, token } = useAuth();
 
-  if (isLoading) {
+  if (isLoading && token) {
     return (
       <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-stone-50 dark:bg-stone-950">
         <div

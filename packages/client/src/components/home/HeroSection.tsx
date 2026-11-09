@@ -1,5 +1,4 @@
 import { ArrowRight, Clock, Sparkles, TrendingUp } from "lucide-react";
-import heroIllustration from "../../assets/hero illustration.webp";
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
 
@@ -53,10 +52,13 @@ export default function HeroSection() {
         <div className="relative mx-auto w-full max-w-2xl lg:-mr-8">
           <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-orange-400/20 to-amber-400/20 blur-2xl" />
           <img
-            src={heroIllustration}
+            src="/hero-illustration.webp"
             alt={t.imageAlt}
             width={1070}
             height={1024}
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
             className="relative h-auto w-full object-contain"
           />
           {/* Floating Stats */}

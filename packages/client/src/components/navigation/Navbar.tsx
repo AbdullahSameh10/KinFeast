@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import logoDark from "../../assets/logo (dark).png";
-import logoLight from "../../assets/logo (light).png";
+import logoDark from "../../assets/logo (dark).webp";
+import logoLight from "../../assets/logo (light).webp";
 
 import { useTheme } from "../../hooks/useTheme";
 import { useLanguage } from "../../hooks/useLanguage";

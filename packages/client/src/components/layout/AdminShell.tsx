@@ -18,8 +18,8 @@ import {
 import { useEffect, useState, type ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-import logoDark from "../../assets/logo (dark).png";
-import logoLight from "../../assets/logo (light).png";
+import logoDark from "../../assets/logo (dark).webp";
+import logoLight from "../../assets/logo (light).webp";
 import logoCollapsed from "../../assets/logo-collapsed.png";
 
 import { useAuth } from "../../hooks/useAuth";

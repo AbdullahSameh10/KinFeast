@@ -14,8 +14,8 @@ import {
 } from "react-icons/fa";
 import { FaTiktok, FaXTwitter } from "react-icons/fa6";
 
-import logoDark from "../../assets/logo (dark).png";
-import logoLight from "../../assets/logo (light).png";
+import logoDark from "../../assets/logo (dark).webp";
+import logoLight from "../../assets/logo (light).webp";
 
 import { useLanguage } from "../../hooks/useLanguage";
 import { translations } from "../../i18n";
