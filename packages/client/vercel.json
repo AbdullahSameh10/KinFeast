@@ -39,6 +39,15 @@
           "value": "application/ai-catalog+json"
         }
       ]
+    },
+    {
+      "source": "/.well-known/ard.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/ard+json; charset=utf-8"
+        }
+      ]
     }
   ],
   "rewrites": [
