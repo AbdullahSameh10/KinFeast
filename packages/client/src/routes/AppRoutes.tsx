@@ -1,11 +1,11 @@
-﻿
-import { lazy, Suspense } from "react";
+﻿import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import AppShell from "../components/layout/AppShell";
 import GuestRoute from "./GuestRoute";
 import RootRoute from "./RootRoute";
 import RoleRoute from "./RoleRoute";
+import { useCanonicalUrl } from "../hooks/useCanonicalUrl";
 
 // Admin pages
 const AdminAnalyticsPage = lazy(
@@ -115,6 +115,7 @@ function RouteLoadingFallback() {
 }
 
 function AppRoutes() {
+  useCanonicalUrl();
   return (
     <AppShell>
       <Suspense fallback={<RouteLoadingFallback />}>
