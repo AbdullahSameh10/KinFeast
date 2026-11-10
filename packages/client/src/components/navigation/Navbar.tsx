@@ -382,6 +382,7 @@ function Navbar() {
           isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
         aria-hidden={!isMenuOpen}
+        inert={!isMenuOpen}
       >
         {/* Backdrop */}
         <button

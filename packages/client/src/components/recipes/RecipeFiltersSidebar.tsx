@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { ChevronDown, Filter, X } from "lucide-react";
 
 interface FilterOption {
@@ -20,14 +21,19 @@ function FilterSelect({
   options,
   onChange,
 }: FilterSelectProps) {
+  const selectId = useId();
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-stone-700 dark:text-stone-200">
+      <label
+        htmlFor={selectId}
+        className="mb-2 block text-sm font-semibold text-stone-700 dark:text-stone-200"
+      >
         {label}
       </label>
 
       <div className="relative">
         <select
+          id={selectId}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           className="w-full appearance-none rounded-xl border border-stone-200 bg-stone-50 px-3.5 py-3 pe-10 text-sm text-stone-800 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 dark:border-stone-800 dark:bg-stone-950 dark:text-stone-200"

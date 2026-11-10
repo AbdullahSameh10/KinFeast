@@ -303,7 +303,7 @@ function RecipesPage() {
 
       <Link
         to="/trending"
-        className="inline-flex shrink-0 items-center justify-center rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-stone-950"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl bg-orange-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-stone-950"
       >
         <Flame size={16} className="me-2" />
         {t.discovery.action}
