@@ -12,7 +12,7 @@ interface AppShellProps {
 
 function RouteLoadingFallback() {
   return (
-    <div
+    <main
       className="flex min-h-[60vh] items-center justify-center"
       role="status"
       aria-label="Loading page"
@@ -21,7 +21,7 @@ function RouteLoadingFallback() {
         className="h-8 w-8 animate-spin rounded-full border-2 border-stone-300 border-t-orange-500 dark:border-stone-700 dark:border-t-orange-400"
         aria-hidden="true"
       />
-    </div>
+    </main>
   );
 }
 

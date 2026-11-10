@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense } from "react";
+﻿import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import AppShell from "../components/layout/AppShell";
@@ -99,26 +99,25 @@ const ApiLicensingPage = lazy(
   () => import("../pages/ApiLicensingPage"),
 );
 
-function RouteLoadingFallback() {
-  return (
-    <div
-      className="flex min-h-[60vh] items-center justify-center"
-      role="status"
-      aria-label="Loading page"
-    >
-      <div
-        className="h-8 w-8 animate-spin rounded-full border-2 border-stone-300 border-t-orange-500 dark:border-stone-700 dark:border-t-orange-400"
-        aria-hidden="true"
-      />
-    </div>
-  );
-}
+// function RouteLoadingFallback() {
+//   return (
+//     <div
+//       className="flex min-h-[60vh] items-center justify-center"
+//       role="status"
+//       aria-label="Loading page"
+//     >
+//       <div
+//         className="h-8 w-8 animate-spin rounded-full border-2 border-stone-300 border-t-orange-500 dark:border-stone-700 dark:border-t-orange-400"
+//         aria-hidden="true"
+//       />
+//     </div>
+//   );
+// }
 
 function AppRoutes() {
   useCanonicalUrl();
   return (
     <AppShell>
-      <Suspense fallback={<RouteLoadingFallback />}>
         <Routes>
           <Route path="/" element={<RootRoute />} />
 
@@ -345,7 +344,6 @@ function AppRoutes() {
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </Suspense>
     </AppShell>
   );
 }
