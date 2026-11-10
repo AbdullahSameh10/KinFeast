@@ -418,7 +418,7 @@ function Navbar() {
                 alt="KinFeast"
                 width={150}
                 height={40}
-                className="hidden h-auto w-[150px] dark:block"
+                className="block h-auto w-[150px] dark:hidden"
               />
             </Link>
 
