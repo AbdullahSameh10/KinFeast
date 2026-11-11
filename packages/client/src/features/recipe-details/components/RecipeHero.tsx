@@ -18,6 +18,8 @@ export function RecipeHero({ image, title, categoryName }: RecipeHeroProps) {
           <img
             src={image}
             alt={title}
+            fetchPriority="high"
+            loading="eager"
             className="block h-full w-full object-cover"
             onError={() => setFailed(true)}
           />

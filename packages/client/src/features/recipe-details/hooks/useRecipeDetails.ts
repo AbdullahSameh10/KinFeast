@@ -44,101 +44,136 @@ export function useRecipeDetails({
   });
 
   const load = useCallback(async () => {
-  if (!slug) {
-    setState((s) => ({
-      ...s,
-      error: errorMessage,
-      isLoading: false,
-    }));
-
-    return;
-  }
-
-  setState((s) => ({
-    ...s,
-    isLoading: true,
-    isNotFound: false,
-    error: "",
-  }));
-
-  let loadingRecipe = true;
-
-  try {
-    const recipeData = await getRecipeBySlug(slug);
-    loadingRecipe = false;
-
-    const [
-      ingredientsData,
-      mediaData,
-      reviewsData,
-      likesData,
-      viewsData,
-    ] = await Promise.all([
-      getRecipeIngredients(recipeData.id),
-      getRecipeMedia(recipeData.id),
-      getRecipeReviews(recipeData.id),
-      getRecipeLikeCount(recipeData.id),
-      getRecipeViewCount(recipeData.id),
-    ]);
-
-    const base = {
-      recipe: recipeData,
-      ingredients: ingredientsData,
-      media: mediaData,
-      reviews: reviewsData,
-      likeCount: likesData,
-      viewCount: viewsData,
-    };
-
-    if (isAuthenticated) {
-      const [favoriteStatus, likeStatus] =
-        await Promise.all([
-          getFavoriteStatus(recipeData.id),
-          getRecipeLikeStatus(recipeData.id),
-        ]);
-
+    if (!slug) {
       setState((s) => ({
         ...s,
-        ...base,
-        isFavorited: favoriteStatus,
-        isLiked: likeStatus,
+        error: errorMessage,
         isLoading: false,
       }));
 
-      recordRecipeView(recipeData.id)
-        .then(() => getRecipeViewCount(recipeData.id))
-        .then((count) =>
-          setState((s) => ({
-            ...s,
-            viewCount: count,
-          })),
-        )
-        .catch(() => {});
-    } else {
+      return;
+    }
+
+    setState((s) => ({
+      ...s,
+      isLoading: true,
+      isNotFound: false,
+      error: "",
+    }));
+
+    let loadingRecipe = true;
+
+    try {
+      // 1. Fetch the essential recipe data first.
+      const recipeData = await getRecipeBySlug(slug);
+      loadingRecipe = false;
+
+      // 2. Render the recipe immediately.
+      // The hero image can now start loading without waiting for secondary data.
       setState((s) => ({
         ...s,
-        ...base,
-        isFavorited: false,
+        recipe: recipeData,
+        ingredients: [],
+        media: [],
+        reviews: [],
+        likeCount: 0,
+        viewCount: 0,
         isLiked: false,
+        isFavorited: false,
         isLoading: false,
+        isNotFound: false,
+        error: "",
+      }));
+
+      // 3. Fetch secondary data in parallel without blocking the page.
+      const results = await Promise.allSettled([
+        getRecipeIngredients(recipeData.id),
+        getRecipeMedia(recipeData.id),
+        getRecipeReviews(recipeData.id),
+        getRecipeLikeCount(recipeData.id),
+        getRecipeViewCount(recipeData.id),
+      ]);
+
+      const [
+        ingredientsResult,
+        mediaResult,
+        reviewsResult,
+        likesResult,
+        viewsResult,
+      ] = results;
+
+      // 4. Update whichever secondary requests succeeded.
+      setState((s) => ({
+        ...s,
+        ingredients:
+          ingredientsResult.status === "fulfilled"
+            ? ingredientsResult.value
+            : s.ingredients,
+        media:
+          mediaResult.status === "fulfilled"
+            ? mediaResult.value
+            : s.media,
+        reviews:
+          reviewsResult.status === "fulfilled"
+            ? reviewsResult.value
+            : s.reviews,
+        likeCount:
+          likesResult.status === "fulfilled"
+            ? likesResult.value
+            : s.likeCount,
+        viewCount:
+          viewsResult.status === "fulfilled"
+            ? viewsResult.value
+            : s.viewCount,
+      }));
+
+      // 5. Authentication-specific requests must not block the recipe either.
+      if (isAuthenticated) {
+        const [favoriteResult, likeStatusResult] =
+          await Promise.allSettled([
+            getFavoriteStatus(recipeData.id),
+            getRecipeLikeStatus(recipeData.id),
+          ]);
+
+        setState((s) => ({
+          ...s,
+          isFavorited:
+            favoriteResult.status === "fulfilled"
+              ? favoriteResult.value
+              : false,
+          isLiked:
+            likeStatusResult.status === "fulfilled"
+              ? likeStatusResult.value
+              : false,
+        }));
+
+        // Record the view separately.
+        recordRecipeView(recipeData.id)
+          .then(() => getRecipeViewCount(recipeData.id))
+          .then((count) => {
+            setState((s) => ({
+              ...s,
+              viewCount: count,
+            }));
+          })
+          .catch(() => {});
+      }
+    } catch (err) {
+      console.error("Recipe details loading error:", err);
+
+      const isNotFound =
+        loadingRecipe &&
+        axios.isAxiosError(err) &&
+        err.response?.status === 404;
+
+      setState((s) => ({
+        ...s,
+        isLoading: false,
+        isNotFound,
+        error: isNotFound ? "" : errorMessage,
       }));
     }
-  } catch (err) {
-    console.error("Recipe details loading error:", err);
-
-    const isNotFound =
-      loadingRecipe &&
-      axios.isAxiosError(err) &&
-      err.response?.status === 404;
-
-    setState((s) => ({
-      ...s,
-      isLoading: false,
-      isNotFound,
-      error: isNotFound ? "" : errorMessage,
-    }));
-  }
-}, [slug, isAuthenticated, errorMessage]);
+  }, [slug, isAuthenticated, errorMessage]);
 
   useEffect(() => {
     const t = window.setTimeout(() => void load(), 0);
