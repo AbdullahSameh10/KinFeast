@@ -52,6 +52,10 @@
   ],
   "rewrites": [
     {
+      "source": "/recipes/:slug",
+      "destination": "/api/recipe-page?slug=:slug"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
