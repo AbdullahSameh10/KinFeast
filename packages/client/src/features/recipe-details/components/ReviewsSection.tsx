@@ -66,7 +66,7 @@ export function ReviewsSection({
             />
           </div>
 
-          <p className="mt-4 text-sm text-emerald-700/70 dark:text-emerald-300/70">
+          <p className="mt-4 text-sm text-emerald-800 dark:text-emerald-200">
             {reviews.length}{" "}
             {reviews.length === 1 ? "review" : "reviews"}
           </p>
@@ -99,7 +99,7 @@ export function ReviewsSection({
                       <p className="font-semibold text-stone-900 dark:text-stone-100">
                         {review.user_name}
                       </p>
-                      <p className="mt-1 text-xs text-stone-400 dark:text-stone-500">
+                      <p className="mt-1 text-xs text-stone-600 dark:text-stone-300">
                         {formatRecipeDate(review.created_at, language)}
                       </p>
                     </div>
