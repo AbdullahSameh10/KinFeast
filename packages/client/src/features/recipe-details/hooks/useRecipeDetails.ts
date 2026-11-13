@@ -216,8 +216,7 @@ export function useRecipeDetails({
   }, [slug, isAuthenticated, errorMessage]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => void load(), 0);
-    return () => window.clearTimeout(t);
+    void Promise.resolve().then(load);
   }, [load]);
 
   const patch = useCallback(

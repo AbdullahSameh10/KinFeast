@@ -86,21 +86,73 @@ interface ViewMutationResponse {
   message?: string;
 }
 
+const RECIPE_REQUEST_CACHE_TTL = 15_000;
+
+const recipeRequestCache = new Map<
+  string,
+  {
+    promise: Promise<Recipe>;
+    expiresAt: number;
+  }
+>();
+
+function requestRecipeBySlug(slug: string): Promise<Recipe> {
+  const responsePromise = apiClient
+    .get<RecipeResponse>(
+      `/recipes/${encodeURIComponent(slug)}`,
+    )
+    .then((response) => {
+      if (!response.data.success) {
+        throw new Error(
+          response.data.message ?? "Unable to fetch recipe.",
+        );
+      }
+
+      return response.data.recipe;
+    });
+
+  return responsePromise;
+}
+
+function getCachedRecipeBySlug(slug: string): Promise<Recipe> {
+  const cached = recipeRequestCache.get(slug);
+
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.promise;
+  }
+
+  recipeRequestCache.delete(slug);
+
+  const promise = requestRecipeBySlug(slug);
+
+  recipeRequestCache.set(slug, {
+    promise,
+    expiresAt: Date.now() + RECIPE_REQUEST_CACHE_TTL,
+  });
+
+  promise.catch(() => {
+    if (recipeRequestCache.get(slug)?.promise === promise) {
+      recipeRequestCache.delete(slug);
+    }
+  });
+
+  return promise;
+}
+
+export function prefetchRecipeBySlug(slug: string): void {
+  if (!slug.trim()) return;
+
+  void getCachedRecipeBySlug(slug).catch(() => {
+    // The normal page hook handles loading errors.
+  });
+}
+
 export async function getRecipeBySlug(
   slug: string,
 ): Promise<Recipe> {
-  const response = await apiClient.get<RecipeResponse>(
-    `/recipes/${encodeURIComponent(slug)}`,
-  );
-
-  if (!response.data.success) {
-    throw new Error(
-      response.data.message ?? "Unable to fetch recipe.",
-    );
-  }
-
-  return response.data.recipe;
+  return getCachedRecipeBySlug(slug);
 }
+
 
 export async function getRecipeIngredients(
   recipeId: number | string,
