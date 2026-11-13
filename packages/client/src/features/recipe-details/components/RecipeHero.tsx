@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Utensils } from "lucide-react";
+import { getRecipeImageSources } from "../utils/recipe-image";
 
 interface RecipeHeroProps {
   image?: string;
@@ -10,16 +11,22 @@ interface RecipeHeroProps {
 export function RecipeHero({ image, title, categoryName }: RecipeHeroProps) {
   const [failed, setFailed] = useState(false);
   const showImage = image && !failed;
+  const imageSources = image
+    ? getRecipeImageSources(image)
+    : undefined;
 
   return (
     <div className="relative w-full overflow-hidden rounded-[2rem] bg-stone-100 shadow-xl ring-1 ring-stone-900/10 dark:bg-stone-800 dark:ring-white/10">
       <div className="aspect-[4/3] w-full">
         {showImage ? (
           <img
-            src={image}
+            src={imageSources?.src}
+            srcSet={imageSources?.srcSet}
+            sizes={imageSources?.sizes}
             alt={title}
             fetchPriority="high"
             loading="eager"
+            decoding="async"
             className="block h-full w-full object-cover"
             onError={() => setFailed(true)}
           />

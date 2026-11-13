@@ -17,6 +17,7 @@ import {
   getFavoriteStatus,
 } from "../../../api/favorites.api";
 import type { Recipe } from "../../../api/recipes.api";
+import { getRecipeImageSources } from "../utils/recipe-image";
 
 interface UseRecipeDetailsArgs {
   slug: string | undefined;
@@ -38,10 +39,18 @@ function preloadRecipeHeroImage(imageUrl: string | null): void {
     if (!["http:", "https:"].includes(url.protocol)) return;
 
     const link = document.createElement("link");
+    const sources = getRecipeImageSources(imageUrl);
 
     link.rel = "preload";
     link.as = "image";
-    link.href = url.href;
+
+    link.href = sources.src;
+
+    if (sources.srcSet) {
+      link.setAttribute("imagesrcset", sources.srcSet);
+      link.setAttribute("imagesizes", sources.sizes);
+    }
+    
     link.setAttribute("fetchpriority", "high");
     link.dataset.recipeHeroPreload = "true";
 
