@@ -24,6 +24,34 @@ interface UseRecipeDetailsArgs {
   errorMessage: string;
 }
 
+
+function preloadRecipeHeroImage(imageUrl: string | null): void {
+  document
+    .querySelector('link[data-recipe-hero-preload]')
+    ?.remove();
+
+  if (!imageUrl?.trim()) return;
+
+  try {
+    const url = new URL(imageUrl);
+
+    if (!["http:", "https:"].includes(url.protocol)) return;
+
+    const link = document.createElement("link");
+
+    link.rel = "preload";
+    link.as = "image";
+    link.href = url.href;
+    link.setAttribute("fetchpriority", "high");
+    link.dataset.recipeHeroPreload = "true";
+
+    document.head.appendChild(link);
+  } catch {
+    // Ignore invalid image URLs.
+  }
+}
+
+
 export function useRecipeDetails({
   slug,
   isAuthenticated,
@@ -67,6 +95,9 @@ export function useRecipeDetails({
       // 1. Fetch the essential recipe data first.
       const recipeData = await getRecipeBySlug(slug);
       loadingRecipe = false;
+
+      // Start downloading the hero image before React renders it.
+      preloadRecipeHeroImage(recipeData.recipe_image);
 
       // 2. Render the recipe immediately.
       // The hero image can now start loading without waiting for secondary data.
